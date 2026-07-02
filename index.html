@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>なかつ暮らしすごろく ～どんぐりちゃんと、ちょうどいい未来さがし～</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Mochiy+Pop+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream-top:#FFE9C2; --cream-mid:#FFF6E6; --cream-base:#FFFDF7;
+  --paper:rgba(255,251,240,0.72);
+  --paper-strong:rgba(255,251,240,0.92);
+  --paper-border:rgba(122,86,53,0.22);
+  --leaf:#8FC996; --leaf-deep:#5FA46A;
+  --sun:#FFC15E; --sun-deep:#F0A128;
+  --coral:#FF9B7A; --coral-deep:#F17A56;
+  --sky:#A9DDEA; --sky-deep:#57ABC4;
+  --plum:#C9A6E8; --plum-deep:#A47AD1;
+  --ink:#5A4430; --ink-dim:#8E7A62;
+  --shadow:0 14px 30px -14px rgba(107,75,51,0.35);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{ margin:0; padding:0; width:100%;
+  height:100vh; height:calc(var(--vh, 1vh) * 100); height:100dvh;
+  background:var(--cream-base); overflow:hidden; overscroll-behavior:none; user-select:none;
+  font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN',sans-serif; color:var(--ink); }
+.display-font{ font-family:'Mochiy Pop One', sans-serif; letter-spacing:0.5px; }
+
+#app{
+  position:relative; width:100%; margin:0 auto;
+  height:100vh; height:calc(var(--vh, 1vh) * 100); height:100dvh;
+  max-width:920px; max-height:920px;
+  overflow:hidden;
+  padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom);
+  background:
+    radial-gradient(circle at 84% 8%, rgba(255,193,94,0.38), transparent 42%),
+    radial-gradient(circle at 10% 14%, rgba(169,221,234,0.36), transparent 44%),
+    radial-gradient(circle at 50% 100%, rgba(143,201,150,0.30), transparent 48%),
+    linear-gradient(160deg, var(--cream-top), var(--cream-mid) 55%, var(--cream-base));
+}
+.blob{ position:absolute; border-radius:50%; filter:blur(38px); opacity:0.5; pointer-events:none; animation:drift 12s ease-in-out infinite alternate; z-index:0; }
+@keyframes drift{ 0%{ transform:translate(0,0) scale(1);} 100%{ transform:translate(16px,-12px) scale(1.06);} }
+
+.hill{ position:absolute; left:-14%; width:128%; pointer-events:none; border-radius:50%; z-index:1; }
+.hill-back{ height:19%; bottom:-6%; background:linear-gradient(180deg, rgba(143,201,150,0.55), rgba(111,180,120,0.85)); }
+.hill-front{ height:12%; bottom:-8%; left:-20%; width:136%; background:linear-gradient(180deg, rgba(111,180,120,0.68), rgba(84,150,92,0.95)); }
+
+/* ---------- paper surface ---------- */
+.glass{
+  background:linear-gradient(180deg, var(--paper-strong), var(--paper));
+  border:1px solid var(--paper-border);
+  border-radius:20px;
+  backdrop-filter:blur(10px) saturate(120%);
+  -webkit-backdrop-filter:blur(10px) saturate(120%);
+  box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+/* ---------- title screen ---------- */
+#titleScreen{
+  position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:14px; text-align:center; padding:24px; z-index:50;
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+}
+.game-logo{
+  font-size:clamp(22px,6vw,34px); line-height:1.45; z-index:2;
+  background:linear-gradient(90deg, var(--leaf-deep), var(--sun-deep) 55%, var(--coral-deep));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 4px 14px rgba(255,193,94,0.35));
+}
+.game-logo small{
+  display:block; margin-top:8px; font-family:'Zen Maru Gothic',sans-serif; font-weight:700;
+  font-size:0.42em; color:var(--ink-dim); letter-spacing:0.5px; -webkit-text-fill-color:var(--ink-dim);
+}
+.tagline{ z-index:2; font-family:'Zen Maru Gothic',sans-serif; font-weight:900; font-size:12.5px;
+  color:var(--coral-deep); background:var(--paper-strong); border:1px dashed var(--paper-border);
+  padding:5px 14px; border-radius:999px; }
+#titleCanvasWrap{ z-index:2; filter:drop-shadow(0 12px 18px rgba(107,75,51,0.28)); animation:floatY 3.2s ease-in-out infinite; }
+@keyframes floatY{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-10px);} }
+.press-start{
+  z-index:2; font-weight:900; font-size:16px; color:#fff; cursor:pointer;
+  background:linear-gradient(135deg, var(--leaf), var(--leaf-deep));
+  padding:13px 30px; border-radius:999px; border:none;
+  box-shadow:0 10px 22px -6px rgba(95,164,106,0.55), inset 0 1px 0 rgba(255,255,255,0.4);
+  animation:pulseGlow 1.8s ease-in-out infinite;
+}
+@keyframes pulseGlow{ 0%,100%{ box-shadow:0 10px 22px -6px rgba(95,164,106,0.55);} 50%{ box-shadow:0 10px 30px -4px rgba(95,164,106,0.85);} }
+.small-note{ z-index:2; font-size:12.5px; font-weight:500; color:var(--ink-dim); max-width:88%; line-height:1.8; padding:10px 16px; }
+
+/* ---------- HUD ---------- */
+#gameScreen{ position:absolute; inset:0; display:none; flex-direction:column; height:100%; }
+#topHud{ display:flex; gap:6px; padding:10px; align-items:center; flex-wrap:wrap; z-index:6; flex-shrink:0; }
+.hud-chip{
+  display:flex; align-items:center; gap:6px; padding:6px 11px; border-radius:999px;
+  font-size:12.5px; font-weight:700; white-space:nowrap;
+}
+.hud-chip b{ font-size:13.5px; }
+.hud-chip.coin b{ color:var(--sun-deep); }
+.hud-chip.loop b{ color:var(--plum-deep); }
+.hud-chip.stamp b{ color:var(--coral-deep); }
+#staminaBarWrap{ flex:1; min-width:82px; display:flex; align-items:center; gap:6px; }
+#staminaBar{ flex:1; height:10px; border-radius:999px; background:rgba(122,86,51,0.16); border:1px solid var(--paper-border); overflow:hidden; }
+#staminaFill{ height:100%; border-radius:999px; background:linear-gradient(90deg, var(--leaf), var(--leaf-deep)); transition:width .3s; box-shadow:0 0 8px rgba(95,164,106,0.5); }
+#itemStrip{ display:flex; gap:4px; }
+.item-icon{
+  width:22px; height:22px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:12px;
+  background:rgba(201,166,232,0.28); border:1px solid rgba(201,166,232,0.6);
+}
+
+/* ---------- board ---------- */
+#boardWrap{ position:relative; flex:1; min-height:0; overflow:hidden; z-index:2; }
+#boardArea{ position:absolute; inset:0; }
+#pathSvg{ position:absolute; inset:0; width:100%; height:100%; filter:drop-shadow(0 0 5px rgba(255,193,94,0.4)); }
+
+.tile{
+  position:absolute; width:29px; height:29px; margin-left:-14.5px; margin-top:-14.5px;
+  border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px;
+  background:radial-gradient(circle at 35% 30%, rgba(255,255,255,0.85), rgba(255,246,224,0.55));
+  border:1px solid var(--paper-border);
+  box-shadow:0 6px 12px -6px rgba(107,75,51,0.35), inset 0 1px 0 rgba(255,255,255,0.7);
+  z-index:3; transition:transform .15s;
+}
+.tile.item{ background:radial-gradient(circle at 35% 30%, rgba(255,155,122,0.6), rgba(255,155,122,0.2)); }
+.tile.gourmet{ background:radial-gradient(circle at 35% 30%, rgba(255,193,94,0.6), rgba(255,193,94,0.2)); }
+.tile.rest{ background:radial-gradient(circle at 35% 30%, rgba(169,221,234,0.55), rgba(169,221,234,0.18)); }
+.tile.warpf, .tile.warpb{ background:radial-gradient(circle at 35% 30%, rgba(143,201,150,0.6), rgba(143,201,150,0.2)); }
+.tile.move{
+  width:37px; height:37px; margin-left:-18.5px; margin-top:-18.5px; font-size:16px;
+  background:radial-gradient(circle at 35% 30%, rgba(201,166,232,0.65), rgba(201,166,232,0.22));
+  border:2px dashed rgba(164,122,209,0.85);
+  box-shadow:0 7px 16px -6px rgba(107,75,51,0.3), 0 0 12px rgba(201,166,232,0.4), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.tile.landmark{
+  width:43px; height:43px; margin-left:-21.5px; margin-top:-21.5px; font-size:19px;
+  background:radial-gradient(circle at 35% 30%, rgba(255,193,94,0.68), rgba(255,193,94,0.24));
+  border:2px dashed rgba(240,161,40,0.9);
+  box-shadow:0 8px 18px -6px rgba(107,75,51,0.35), 0 0 16px rgba(255,193,94,0.4), inset 0 1px 0 rgba(255,255,255,0.55);
+}
+.tile.start{
+  width:52px; height:52px; margin-left:-26px; margin-top:-26px; font-size:23px;
+  background:radial-gradient(circle at 35% 30%, rgba(143,201,150,0.8), rgba(143,201,150,0.28));
+  border:2px solid rgba(95,164,106,0.9);
+  box-shadow:0 8px 20px -6px rgba(107,75,51,0.35), 0 0 20px rgba(143,201,150,0.5), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+.tile .tlabel{
+  position:absolute; top:-18px; left:50%; transform:translateX(-50%);
+  font-size:8.5px; font-weight:700; white-space:nowrap; color:var(--ink);
+  background:var(--paper-strong); border:1px solid var(--paper-border);
+  padding:2px 6px; border-radius:999px; pointer-events:none;
+  max-width:min(64px, 20vw); overflow:hidden; text-overflow:ellipsis;
+}
+.tile .tlabel.anchor-left{ left:0; transform:translateX(-6px); }
+.tile .tlabel.anchor-right{ left:auto; right:0; transform:translateX(6px); }
+.tile .tlabel.row-b{ top:-31px; }
+.tile.active-glow{ animation:tileGlow 1s infinite; }
+@keyframes tileGlow{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.12);} }
+
+#playerToken{
+  position:absolute; width:38px; height:44px; margin-left:-19px; margin-top:-38px;
+  z-index:10; transition:left .18s ease, top .18s ease;
+  filter:drop-shadow(0 8px 8px rgba(107,75,51,0.4));
+  animation:idleBob 1.6s ease-in-out infinite;
+}
+#playerToken.hop{ animation:hop .35s cubic-bezier(.3,.8,.4,1); }
+@keyframes hop{ 0%{ transform:translateY(0) scale(1,1);} 35%{ transform:translateY(-17px) scale(0.95,1.08);} 100%{ transform:translateY(0) scale(1,1);} }
+@keyframes idleBob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-3px);} }
+#playerToken canvas{ width:100%; height:100%; }
+
+/* ---------- bottom panel ---------- */
+#bottomPanel{ position:relative; z-index:6; flex-shrink:0; margin:8px 10px 10px; padding:12px 14px; display:flex; gap:10px; align-items:stretch; }
+#msgLog{ flex:1; min-height:56px; font-size:13.5px; font-weight:500; line-height:1.7; padding:6px 4px; color:var(--ink); }
+#diceZone{ width:108px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; }
+#diceFace{
+  width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+  font-size:23px; font-weight:900; color:#4A3016;
+  background:linear-gradient(145deg, #fff, #FFEFD6);
+  box-shadow:0 10px 16px -6px rgba(107,75,51,0.35), inset 0 1px 0 rgba(255,255,255,0.9);
+  transform-style:preserve-3d;
+}
+#diceFace.rolling{ animation:diceRoll .12s linear infinite; }
+@keyframes diceRoll{ 0%{ transform:rotate(0deg) scale(1);} 50%{ transform:rotate(180deg) scale(0.92);} 100%{ transform:rotate(360deg) scale(1);} }
+.btn{
+  font-family:'Zen Maru Gothic',sans-serif; font-weight:900; font-size:14px; color:#4A3016; cursor:pointer;
+  background:linear-gradient(135deg, var(--sun), var(--sun-deep));
+  border:none; padding:10px 18px; border-radius:999px;
+  box-shadow:0 8px 16px -6px rgba(240,161,40,0.5), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.btn:active{ transform:translateY(2px); }
+.btn:disabled{ opacity:.35; cursor:default; }
+.btn.secondary{ background:linear-gradient(135deg, var(--sky), var(--sky-deep)); box-shadow:0 8px 16px -6px rgba(87,171,196,0.5), inset 0 1px 0 rgba(255,255,255,0.5); color:#0F3A45; }
+a.btn{ display:inline-block; text-decoration:none; text-align:center; }
+
+/* ---------- modal ---------- */
+#modalLayer{ position:absolute; inset:0; z-index:40; display:none; align-items:flex-end; justify-content:center; background:rgba(90,68,48,0.42); backdrop-filter:blur(3px); }
+#modalBox{ width:100%; max-width:640px; margin:0 12px 12px; padding:18px; animation:slideUp .25s ease; }
+@keyframes slideUp{ from{ transform:translateY(24px); opacity:0;} to{ transform:translateY(0); opacity:1;} }
+#modalTitle{ font-size:16.5px; font-weight:900; color:var(--coral-deep); margin-bottom:8px; }
+#modalBody{ font-size:14px; font-weight:500; line-height:1.9; white-space:pre-wrap; color:var(--ink); }
+#modalChoices{ display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+.choice-btn{
+  text-align:left; background:rgba(255,251,240,0.55); border:1px solid var(--paper-border); color:var(--ink);
+  font-family:'Zen Maru Gothic',sans-serif; font-weight:700; font-size:14px; padding:11px 14px; border-radius:14px; cursor:pointer;
+}
+.choice-btn:hover{ background:rgba(255,251,240,0.9); }
+.choice-btn.correct{ background:rgba(143,201,150,0.4); border-color:var(--leaf-deep); color:#2C4A30; }
+.choice-btn.wrong{ background:rgba(255,155,122,0.4); border-color:var(--coral-deep); color:#5A2C1A; }
+#modalFooter{ margin-top:12px; display:flex; justify-content:flex-end; }
+
+/* ---------- result screen ---------- */
+#resultScreen{ position:absolute; inset:0; z-index:60; display:none; align-items:center; justify-content:center; background:rgba(90,68,48,0.55); padding:18px; overflow-y:auto; }
+#resultBox{ width:100%; max-width:420px; text-align:center; padding:24px 20px; margin:auto; }
+#resultRank{
+  font-family:'Mochiy Pop One',sans-serif; font-size:50px; margin:4px 0 0;
+  background:linear-gradient(90deg, var(--sun-deep), var(--coral-deep)); -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 4px 12px rgba(255,193,94,0.35));
+}
+#resultRankLabel{ display:block; font-size:14px; font-weight:900; color:var(--coral-deep); margin-bottom:8px; }
+.result-row{ display:flex; justify-content:space-between; font-size:13.5px; font-weight:700; padding:7px 2px; border-bottom:1px dashed var(--paper-border); color:var(--ink); text-align:left;}
+#stampGrid{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:12px 0; }
+.stamp-badge{ width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px;
+  background:rgba(201,166,232,0.15); border:2px dashed rgba(164,122,209,0.4); opacity:0.35; filter:grayscale(0.6); }
+.stamp-badge.got{ opacity:1; filter:none; background:rgba(201,166,232,0.35); border-color:rgba(164,122,209,0.9); box-shadow:0 0 8px rgba(201,166,232,0.5); }
+#completeBanner{ display:none; background:linear-gradient(135deg, rgba(143,201,150,0.35), rgba(255,193,94,0.35)); border:1px dashed var(--leaf-deep); border-radius:14px; padding:10px; font-size:13px; font-weight:900; color:#2C4A30; margin-bottom:10px; }
+#ctaBox{ margin-top:16px; padding-top:14px; border-top:1px dashed var(--paper-border); display:flex; flex-direction:column; gap:8px; }
+#ctaBox .cta-lead{ font-size:12.5px; font-weight:900; color:var(--ink-dim); margin-bottom:2px; }
+
+#particleLayer{ position:absolute; inset:0; pointer-events:none; z-index:20; }
+.particle{ position:absolute; font-size:14px; font-weight:900; color:var(--sun-deep); animation:floatUp 1s ease-out forwards; }
+@keyframes floatUp{ 0%{ opacity:1; transform:translateY(0) scale(1);} 100%{ opacity:0; transform:translateY(-42px) scale(1.3);} }
+
+@media (max-width:420px){
+  #diceZone{ width:90px; }
+  .tile{ width:23px; height:23px; margin-left:-11.5px; margin-top:-11.5px; }
+  .tile.move{ width:32px; height:32px; margin-left:-16px; margin-top:-16px; }
+  .tile.landmark{ width:35px; height:35px; margin-left:-17.5px; margin-top:-17.5px; }
+  .tile.start{ width:41px; height:41px; margin-left:-20.5px; margin-top:-20.5px; }
+  .tile .tlabel{ font-size:7.8px; padding:1.5px 5px; max-width:min(52px, 22vw); top:-15px; }
+  .tile .tlabel.row-b{ top:-26px; }
+}
+
+/* 画面が縦に低い端末（横向きスマホ・小型端末）ではタイトル画面を詰める */
+@media (max-height:700px){
+  #titleScreen{ gap:8px; padding:16px; }
+  #titleCanvasWrap canvas{ width:110px; height:126px; }
+  .game-logo{ font-size:clamp(18px,5.4vw,26px); }
+  .press-start{ padding:11px 26px; font-size:14.5px; }
+  .small-note{ font-size:11.5px; line-height:1.6; padding:6px 12px; }
+  .tagline{ font-size:11px; padding:4px 12px; }
+}
+@media (max-height:560px){
+  #titleCanvasWrap{ display:none; }
+  #topHud{ padding:6px; }
+  #bottomPanel{ margin:6px 8px 8px; padding:8px 10px; }
+  #diceFace{ width:44px; height:44px; font-size:19px; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="hill hill-back"></div>
+  <div class="hill hill-front"></div>
+  <div class="blob" style="width:200px;height:200px;background:var(--sky);top:-50px;left:-30px;"></div>
+  <div class="blob" style="width:240px;height:240px;background:var(--sun);top:16%;right:-80px;animation-delay:2s;"></div>
+  <div class="blob" style="width:190px;height:190px;background:var(--leaf);bottom:-40px;left:32%;animation-delay:4s;"></div>
+
+  <!-- TITLE -->
+  <div id="titleScreen">
+    <div class="game-logo display-font">中津どんぐりすごろく<small>どんぐりちゃんと、なかつ暮らし発見の旅</small></div>
+    <div class="tagline">田舎 + まち、ちょうどいい、なかつ。</div>
+    <div id="titleCanvasWrap"><canvas id="titleCanvas" width="150" height="172"></canvas></div>
+    <button class="press-start" id="startBtn">▶ タップしてスタート</button>
+    <div class="small-note">中津駅からぐるっと1周、名所や暮らしのヒミツをめぐって「なかつスタンプ📮」を集めよう。ぜんぶ集めたら、あなたも今日から中津市民!?</div>
+  </div>
+
+  <!-- GAME -->
+  <div id="gameScreen">
+    <div id="topHud">
+      <div class="hud-chip glass coin">💰<b id="coinVal">0</b></div>
+      <div class="hud-chip glass loop">🌀<b id="loopVal">1</b>周目</div>
+      <div class="hud-chip glass stamp">📮<b id="stampVal">0</b>/<span id="stampTotal">15</span></div>
+      <div class="hud-chip glass" id="staminaBarWrap">⚡<div id="staminaBar"><div id="staminaFill" style="width:100%"></div></div></div>
+      <div class="hud-chip glass" id="itemStrip"></div>
+    </div>
+
+    <div id="boardWrap">
+      <div id="boardArea">
+        <svg id="pathSvg" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="pathGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#8FC996"/>
+              <stop offset="50%" stop-color="#FFC15E"/>
+              <stop offset="100%" stop-color="#C9A6E8"/>
+            </linearGradient>
+          </defs>
+          <polyline id="pathLine" points="" fill="none" stroke="url(#pathGrad)" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"/>
+        </svg>
+      </div>
+      <div id="playerToken"></div>
+      <div id="particleLayer"></div>
+    </div>
+
+    <div id="bottomPanel" class="glass">
+      <div id="msgLog">中津駅に到着した。さあ、暮らし発見の旅の始まりだ！</div>
+      <div id="diceZone">
+        <div id="diceFace">?</div>
+        <button class="btn" id="rollBtn">サイコロを振る</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div id="modalLayer">
+    <div id="modalBox" class="glass">
+      <div id="modalTitle">発見！</div>
+      <div id="modalBody"></div>
+      <div id="modalChoices"></div>
+      <div id="modalFooter"><button class="btn secondary" id="modalOkBtn">とじる</button></div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="resultScreen">
+    <div id="resultBox" class="glass">
+      <div style="font-size:13.5px;font-weight:700;color:var(--sun-deep)">中津一周 コンプリート！</div>
+      <div id="resultRank" class="display-font">S</div>
+      <span id="resultRankLabel">なかつ通</span>
+      <div id="completeBanner">📮 スタンプ全部集めた！ あなたはもう"なかつマスター"だよ✨</div>
+      <div id="stampGrid"></div>
+      <div class="result-row"><span>獲得コイン</span><span id="rCoin">0</span></div>
+      <div class="result-row"><span>お土産ボーナス</span><span id="rItem">0</span></div>
+      <div class="result-row"><span>残りスタミナ</span><span id="rStamina">0</span></div>
+      <div class="result-row"><span>クイズ正解</span><span id="rQuiz">0</span></div>
+      <div class="result-row"><span>スタンプボーナス</span><span id="rStamp">0</span></div>
+      <div class="result-row" style="font-weight:900;color:var(--sun-deep)"><span>スコア</span><span id="rTotal">0</span></div>
+      <div class="result-row"><span>自己ベスト</span><span id="rBest">0</span></div>
+      <div style="margin-top:16px; display:flex; gap:8px; justify-content:center;">
+        <button class="btn" id="againBtn">もう一周する</button>
+        <button class="btn secondary" id="titleBackBtn">タイトルへ</button>
+      </div>
+      <div id="ctaBox">
+        <div class="cta-lead">🏡 本物の「なかつ」に会いに行こう</div>
+        <a class="btn" href="https://www.city-nakatsu.jp/categories/bunya/chihososei/iju/" target="_blank" rel="noopener">中津市 移住・定住サイトを見る</a>
+        <a class="btn secondary" href="https://iju.city-nakatsu.com/" target="_blank" rel="noopener">なかつ空き家バンクを見る</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   モバイル実ビューポート高さ対応（アドレスバーの伸縮で
+   ボタンが画面外に押し出されるのを防ぐ）
+========================================================= */
+function setRealViewportHeight(){
+  document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
+}
+setRealViewportHeight();
+window.addEventListener('resize', setRealViewportHeight);
+window.addEventListener('orientationchange', setRealViewportHeight);
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', setRealViewportHeight);
+}
+
+/* =========================================================
+   どんぐりちゃん スムーズ・グラデーション スプライト描画
+========================================================= */
+function drawAcorn(ctx){
+  const W=60, H=69;
+  ctx.imageSmoothingEnabled = true;
+  ctx.clearRect(0,0,W,H);
+
+  // ground shadow
+  ctx.fillStyle = 'rgba(107,75,51,0.20)';
+  ctx.beginPath(); ctx.ellipse(30,66,15,4,0,0,Math.PI*2); ctx.fill();
+
+  // legs
+  const legGrad = ctx.createLinearGradient(0,58,0,66);
+  legGrad.addColorStop(0,'#CE8A54'); legGrad.addColorStop(1,'#9C5E30');
+  ctx.fillStyle = legGrad;
+  roundRect(ctx,19,58,8,8,3); ctx.fill();
+  roundRect(ctx,33,58,8,8,3); ctx.fill();
+
+  // arms
+  const armGrad = ctx.createRadialGradient(9,44,1,9,44,9);
+  armGrad.addColorStop(0,'#F3C596'); armGrad.addColorStop(1,'#CE8A54');
+  ctx.fillStyle = armGrad;
+  ctx.beginPath(); ctx.ellipse(9,44,6,9,0.35,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(51,44,6,9,-0.35,0,Math.PI*2); ctx.fill();
+
+  // body
+  const bodyGrad = ctx.createRadialGradient(24,36,4,30,42,26);
+  bodyGrad.addColorStop(0,'#FBDCB2');
+  bodyGrad.addColorStop(0.55,'#F0BE8A');
+  bodyGrad.addColorStop(1,'#C9854F');
+  ctx.fillStyle = bodyGrad;
+  ctx.beginPath(); ctx.ellipse(30,42,22,22,0,0,Math.PI*2); ctx.fill();
+
+  // rim light
+  ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+  ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.ellipse(30,42,21.3,21.3,0,Math.PI*1.15,Math.PI*1.75); ctx.stroke();
+
+  // hat brim
+  const brimGrad = ctx.createLinearGradient(4,20,56,20);
+  brimGrad.addColorStop(0,'#5FA46A'); brimGrad.addColorStop(0.5,'#8FC996'); brimGrad.addColorStop(1,'#4E8858');
+  ctx.fillStyle = brimGrad;
+  ctx.beginPath(); ctx.ellipse(28,21,25,7,-0.04,0,Math.PI*2); ctx.fill();
+
+  // hat dome
+  const domeGrad = ctx.createRadialGradient(22,10,2,28,13,18);
+  domeGrad.addColorStop(0,'#A8DBA8'); domeGrad.addColorStop(1,'#5FA46A');
+  ctx.fillStyle = domeGrad;
+  ctx.beginPath(); ctx.ellipse(28,12,16,11,0,Math.PI,0,true); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.beginPath(); ctx.ellipse(21,8,6,3.4,0,0,Math.PI*2); ctx.fill();
+
+  // stem
+  ctx.fillStyle = '#5C3A1E';
+  roundRect(ctx,26,-1,5,7,2); ctx.fill();
+  // sparkle
+  drawSparkle(ctx,44,4,3.5,'#FFE9B0');
+
+  // eyes
+  ctx.fillStyle = '#4A3016';
+  ctx.beginPath(); ctx.ellipse(21,39,5,6.2,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(38,39,5,6.2,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.arc(19.4,37,1.6,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(36.4,37,1.6,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.beginPath(); ctx.arc(22,41,0.9,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(39,41,0.9,0,Math.PI*2); ctx.fill();
+
+  // blush
+  ctx.fillStyle = 'rgba(255,155,122,0.55)';
+  ctx.beginPath(); ctx.ellipse(13,46,4,2.6,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(46,46,4,2.6,0,0,Math.PI*2); ctx.fill();
+
+  // nose
+  ctx.fillStyle = '#E8935A';
+  ctx.beginPath(); ctx.moveTo(28,43.5); ctx.lineTo(32,43.5); ctx.lineTo(30,47); ctx.closePath(); ctx.fill();
+
+  // mouth
+  ctx.fillStyle = '#3A2410';
+  ctx.beginPath(); ctx.ellipse(30,51,4.4,2.6,0,0,Math.PI); ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(27.6,49.4,2,2); ctx.fillRect(30.4,49.4,2,2);
+}
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+}
+function drawSparkle(ctx,x,y,s,color){
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x,y-s); ctx.lineTo(x+s*0.28,y-s*0.28); ctx.lineTo(x+s,y); ctx.lineTo(x+s*0.28,y+s*0.28);
+  ctx.lineTo(x,y+s); ctx.lineTo(x-s*0.28,y+s*0.28); ctx.lineTo(x-s,y); ctx.lineTo(x-s*0.28,y-s*0.28);
+  ctx.closePath(); ctx.fill();
+}
+const titleCv = document.getElementById('titleCanvas');
+(function(){
+  const off = document.createElement('canvas'); off.width=60; off.height=69;
+  drawAcorn(off.getContext('2d'));
+  const tctx = titleCv.getContext('2d');
+  tctx.imageSmoothingEnabled = true;
+  tctx.drawImage(off,0,0,60,69,0,0,150,172);
+})();
+
+/* =========================================================
+   サウンド（WebAudio 簡易ビープ）
+========================================================= */
+let actx;
+function beep(freq=440, dur=0.09, type='sine', vol=0.06, delay=0){
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    const t0 = actx.currentTime + delay;
+    const osc = actx.createOscillator();
+    const gain = actx.createGain();
+    osc.type = type; osc.frequency.value = freq;
+    gain.gain.setValueAtTime(vol, t0);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+    osc.connect(gain); gain.connect(actx.destination);
+    osc.start(t0); osc.stop(t0+dur);
+  }catch(e){}
+}
+function sfxRoll(){ for(let i=0;i<4;i++) beep(300+Math.random()*300,0.04,'triangle',0.04,i*0.05); }
+function sfxStep(){ beep(560,0.05,'triangle',0.05); }
+function sfxCoin(){ beep(880,0.06,'sine',0.06); beep(1320,0.08,'sine',0.05,0.06); }
+function sfxCorrect(){ beep(660,0.09,'sine',0.06); beep(990,0.12,'sine',0.06,0.09); }
+function sfxWrong(){ beep(160,0.18,'sawtooth',0.05); }
+function sfxFanfare(){ [523,659,784,1047].forEach((f,i)=>beep(f,0.16,'sine',0.06,i*0.14)); }
+function sfxStamp(){ beep(740,0.07,'sine',0.06); beep(1100,0.09,'sine',0.05,0.07); }
+
+/* =========================================================
+   ボードデータ
+========================================================= */
+const TILE_TYPES = { START:'start', NORMAL:'normal', LANDMARK:'landmark', ITEM:'item', GOURMET:'gourmet', REST:'rest', WARP_FWD:'warpf', WARP_BACK:'warpb', MOVE:'move' };
+
+const QUIZZES = [
+ {name:'福澤諭吉旧居・福澤記念館', short:'福澤記念館', icon:'📖',
+  fact:'福澤諭吉は1歳6か月で父を亡くして中津に戻り、19歳で長崎へ旅立つまでこの家で過ごした。隣の記念館には「学問のすゝめ」の原本や、諭吉の肖像で知られる一万円札の貴重な券が展示されている。',
+  q:'福澤記念館に展示されている一万円札は何号券？', c:['1号券','100号券','999号券'], a:0},
+ {name:'中津市木村記念美術館', short:'木村美術館', icon:'🖼️',
+  fact:'医師・木村又郎氏が設立した個人美術館を中津市が譲り受け、平成22年に生まれ変わった美術館。洋画家・中山忠彦の作品を中心に収蔵している。',
+  q:'この美術館の展示の特徴は？', c:['絵画をショーケースに入れず間近で鑑賞できる','展示品はすべてレプリカ','館内の撮影が自由にできる'], a:0},
+ {name:'自性寺「大雅堂」', short:'大雅堂', icon:'🎋',
+  fact:'江戸中期、京から招かれた画家がしばらく滞在し、多くの書画を残した。その作品47点は全国でもまとまって見られる貴重なコレクションとして今も大切に保存されている。',
+  q:'自性寺「大雅堂」に47点保存されているのは、誰の書画？', c:['雪舟','池大雅','狩野探幽'], a:1},
+ {name:'村上医家史料館', short:'村上史料館', icon:'🏥',
+  fact:'寛永17年(1640)創業、代々中津藩の御典医を務めた村上家の史料館。裏庭の土蔵には、江戸後期に幕府に追われたある人物をかくまったという言い伝えが残る。',
+  q:'村上医家史料館の土蔵にかくまわれていたと伝わる人物は？', c:['前野良沢','高野長英','シーボルト'], a:1},
+ {name:'合元寺（赤壁寺）', short:'赤壁寺', icon:'⛩️',
+  fact:'中津の寺町にある古刹で、通称「赤壁寺」として親しまれている。その名の由来は、外から見てすぐ分かる建物の色にある。',
+  q:'合元寺が「赤壁寺」と呼ばれる理由は？', c:['本堂の柱が赤いから','外壁が赤く塗られているから','屋根瓦が赤いから'], a:1},
+ {name:'大江医家史料館', short:'大江史料館', icon:'💊',
+  fact:'代々中津藩の御殿医を務めた大江家の史料館。5代目の雲澤は、ある高名な医師のもとで学んだのち、中津医学校の初代校長を務めた。',
+  q:'大江家5代目・雲澤が学び、世界初とされる全身麻酔手術を成功させたことで知られる医師は？', c:['杉田玄白','華岡青洲','シーボルト'], a:1},
+ {name:'円応寺（河童の館）', short:'河童の館', icon:'🐢',
+  fact:'境内には「河童の墓」が伝わる。川で遊んでいた河童たちが住職の教えに心を打たれて仏門に入り、修行の末に戒名を授かったという言い伝えがある。',
+  q:'円応寺の河童たちは、お礼に何をすると約束した？', c:['毎年米を届ける','寺を火事から守る','橋を架ける'], a:1},
+ {name:'中津市歴史博物館（なかはく）', short:'なかはく', icon:'🏛️',
+  fact:'愛称「なかはく」。中津の歴史と文化を紹介する博物館で、館内には無料で楽しめる体験ゾーンやカフェもある。',
+  q:'「なかはく」の建物ならではの最大の特徴は？', c:['壁が総ガラス張りで石垣を間近に眺められる','館内がすべて地下にある','展示室に窓が一つもない'], a:0},
+ {name:'中津城（奥平家歴史資料館）', short:'中津城', icon:'🏯',
+  fact:'堀に海水が引き込まれる「水城」で、今治城・高松城と並ぶ日本三大水城のひとつに数えられる。本丸・二の丸・三の丸の配置がある形に似ていることから別名でも呼ばれる。',
+  q:'中津城は全体の形がある物に似ていることから何と呼ばれる？', c:['扇城','花城','雲城'], a:0},
+];
+
+/* 「なかつ暮らしのヒミツ」＝移住・定住の実際の制度や魅力を紹介するマス */
+const MOVE_INFOS = [
+ {name:'空き家バンクのひみつ', short:'空き家バンク', icon:'🏠',
+  fact:'中津市の「空き家バンク」に登録された家をリフォームすると、市が費用の半分（中津エリアなら最大50万円）を応援してくれる。ふるさとの空き家が、また誰かの「おかえり」の場所になる制度だよ。'},
+ {name:'移住支援金のひみつ', short:'移住支援金', icon:'💴',
+  fact:'県外から中津市に引っ越すと、1世帯20万円の応援金がもらえることがある。お子さんがいる家庭はさらに1人につき10万円（上限20万円）が上乗せ。家族みんなで新しい暮らしをスタートできるね。'},
+ {name:'「ちょうどいい」立地のひみつ', short:'ちょうどいい立地', icon:'🗺️',
+  fact:'中津市は北九州市と大分市のちょうど真ん中。電車も高速道路もそろっていて、都会にも自然にもすぐ出かけられる。合言葉は「田舎+まち、ちょうどいい、なかつ」！'},
+ {name:'耶馬渓、四季のひみつ', short:'耶馬渓', icon:'⛰️',
+  fact:'中津市が誇る渓谷・耶馬渓は「新日本三景」にも選ばれた景勝地。春は桜、夏はホタル、秋は紅葉、冬は温泉と、1年じゅう自然の贈り物が届くよ。'},
+ {name:'しごと・梨学校のひみつ', short:'梨学校', icon:'🍐',
+  fact:'中津市には2年間しっかり学べる「梨学校」があって、農業未経験でも梨づくりの担い手になれる。ほかにも地域おこし協力隊など、新しい仕事を始める人を応援する仕組みがいろいろあるよ。'},
+ {name:'子育て・教育のひみつ', short:'子育て支援', icon:'🎓',
+  fact:'進学で県外に出た人が地元に帰ってくると、奨学金の返済を応援してもらえる「おかえりなさい」制度がある。子育て世代にやさしいまちづくりが進んでいるんだ。'},
+];
+const STAMP_TOTAL = QUIZZES.length + MOVE_INFOS.length;
+document.getElementById('stampTotal').textContent = STAMP_TOTAL;
+
+const ITEM_POOL = [
+ {icon:'🍡', name:'和菓子（桃屋善兵衛）'},
+ {icon:'🍶', name:'地元の銘酒'},
+ {icon:'🧵', name:'和傘工房の小物'},
+ {icon:'👘', name:'きものの小島屋の反物'},
+ {icon:'🍘', name:'豊前銘菓せんべい'},
+];
+
+const BOARD = [
+ {type:TILE_TYPES.START, label:'中津駅', icon:'🚉'},
+ {type:TILE_TYPES.NORMAL, label:''},
+ {type:TILE_TYPES.MOVE, move:2},
+ {type:TILE_TYPES.ITEM, label:'からあげ通り'},
+ {type:TILE_TYPES.LANDMARK, quiz:0},
+ {type:TILE_TYPES.NORMAL, label:''},
+ {type:TILE_TYPES.MOVE, move:0},
+ {type:TILE_TYPES.WARP_FWD, label:'近道！'},
+ {type:TILE_TYPES.LANDMARK, quiz:1},
+ {type:TILE_TYPES.GOURMET, label:'からあげ屋'},
+ {type:TILE_TYPES.REST, label:'一休み'},
+ {type:TILE_TYPES.LANDMARK, quiz:2},
+ {type:TILE_TYPES.MOVE, move:3},
+ {type:TILE_TYPES.NORMAL, label:''},
+ {type:TILE_TYPES.ITEM, label:'土産店'},
+ {type:TILE_TYPES.LANDMARK, quiz:3},
+ {type:TILE_TYPES.NORMAL, label:''},
+ {type:TILE_TYPES.GOURMET, label:'からあげ屋'},
+ {type:TILE_TYPES.LANDMARK, quiz:4},
+ {type:TILE_TYPES.MOVE, move:1},
+ {type:TILE_TYPES.NORMAL, label:''},
+ {type:TILE_TYPES.WARP_BACK, label:'道に迷った…'},
+ {type:TILE_TYPES.LANDMARK, quiz:5},
+ {type:TILE_TYPES.NORMAL, label:''},
+ {type:TILE_TYPES.ITEM, label:'土産店'},
+ {type:TILE_TYPES.LANDMARK, quiz:6},
+ {type:TILE_TYPES.MOVE, move:4},
+ {type:TILE_TYPES.NORMAL, label:''},
+ {type:TILE_TYPES.REST, label:'一休み'},
+ {type:TILE_TYPES.LANDMARK, quiz:7},
+ {type:TILE_TYPES.MOVE, move:5},
+ {type:TILE_TYPES.NORMAL, label:''},
+ {type:TILE_TYPES.LANDMARK, quiz:8},
+];
+const N = BOARD.length;
+
+function buildPathPoints(n){
+  const verts = [ [20,88],[8,74],[8,26],[20,12],[80,12],[92,26],[92,74],[80,88] ];
+  const segs = [];
+  let total = 0;
+  for(let i=0;i<verts.length;i++){
+    const a = verts[i], b = verts[(i+1)%verts.length];
+    const d = Math.hypot(b[0]-a[0], b[1]-a[1]);
+    segs.push({a,b,d}); total += d;
+  }
+  const pts = [];
+  for(let i=0;i<n;i++){
+    let dist = (total * i / n);
+    for(const s of segs){
+      if(dist <= s.d){
+        const r = s.d===0?0:dist/s.d;
+        pts.push([ s.a[0]+(s.b[0]-s.a[0])*r, s.a[1]+(s.b[1]-s.a[1])*r ]);
+        break;
+      }
+      dist -= s.d;
+    }
+  }
+  return pts;
+}
+const PATH = buildPathPoints(N);
+
+/* =========================================================
+   ゲーム状態
+========================================================= */
+const state = { pos:0, coins:0, stamina:20, maxStamina:20, items:[], quizCorrect:0, loop:1, turns:0, finished:false, busy:false, stamps:new Set(), bestScore:0 };
+
+const boardArea = document.getElementById('boardArea');
+const playerToken = document.getElementById('playerToken');
+
+function renderBoard(){
+  boardArea.querySelectorAll('.tile').forEach(e=>e.remove());
+  const pts = PATH.map(p=>p.join(',')).join(' ') + ' ' + PATH[0].join(',');
+  document.getElementById('pathLine').setAttribute('points', pts);
+
+  let labelRow = 0;
+  BOARD.forEach((tile, i)=>{
+    const [xp,yp] = PATH[i];
+    const div = document.createElement('div');
+    let cls = 'tile';
+    let icon = '·';
+    // 名所・ヒミツ・スタート地点のみタイル上にラベルを出す（他の種別はアイコンのみ）
+    // → 文字の重なり・はみ出しを防ぐため、短縮名(short)を優先して使う
+    let label = '';
+    if(tile.type===TILE_TYPES.START){ cls+=' start'; icon='🚉'; label='中津駅'; }
+    else if(tile.type===TILE_TYPES.LANDMARK){ cls+=' landmark'; icon = QUIZZES[tile.quiz].icon; label = QUIZZES[tile.quiz].short || QUIZZES[tile.quiz].name; }
+    else if(tile.type===TILE_TYPES.MOVE){ cls+=' move'; icon = MOVE_INFOS[tile.move].icon; label = MOVE_INFOS[tile.move].short || MOVE_INFOS[tile.move].name; }
+    else if(tile.type===TILE_TYPES.ITEM){ cls+=' item'; icon='🎁'; }
+    else if(tile.type===TILE_TYPES.GOURMET){ cls+=' gourmet'; icon='🍗'; }
+    else if(tile.type===TILE_TYPES.REST){ cls+=' rest'; icon='💤'; }
+    else if(tile.type===TILE_TYPES.WARP_FWD){ cls+=' warpf'; icon='➡️'; }
+    else if(tile.type===TILE_TYPES.WARP_BACK){ cls+=' warpb'; icon='↩️'; }
+    else { icon='　'; }
+    div.className = cls;
+    div.style.left = xp+'%'; div.style.top = yp+'%';
+    div.dataset.idx = i;
+    let labelHtml = '';
+    if(label){
+      // 盤の左右端に近いタイルはラベルが画面外にはみ出さないよう、
+      // 中央寄せではなく左寄せ／右寄せに切り替える
+      let anchorCls = '';
+      if(xp < 16) anchorCls = ' anchor-left';
+      else if(xp > 84) anchorCls = ' anchor-right';
+      // 隣り合うラベル同士が重ならないよう、上下2段でジグザグ配置にする
+      const rowCls = (labelRow % 2 === 1) ? ' row-b' : '';
+      labelRow++;
+      labelHtml = `<div class="tlabel${anchorCls}${rowCls}" title="${label}">${label}</div>`;
+    }
+    div.innerHTML = labelHtml + `<span>${icon}</span>`;
+    boardArea.appendChild(div);
+  });
+  placeToken();
+}
+
+function placeToken(){
+  const [xp,yp] = PATH[state.pos];
+  playerToken.style.left = xp+'%';
+  playerToken.style.top = yp+'%';
+}
+
+function updateHud(){
+  document.getElementById('coinVal').textContent = state.coins;
+  document.getElementById('loopVal').textContent = state.loop;
+  document.getElementById('stampVal').textContent = state.stamps.size;
+  document.getElementById('staminaFill').style.width = Math.max(0,(state.stamina/state.maxStamina*100))+'%';
+  const strip = document.getElementById('itemStrip');
+  strip.innerHTML = state.items.length? state.items.map(it=>`<div class="item-icon" title="${it.name}">${it.icon}</div>`).join('') : '<span style="opacity:.5;font-size:12px;">アイテムなし</span>';
+}
+
+function log(msg){ document.getElementById('msgLog').textContent = msg; }
+
+function addStamp(key){
+  if(state.stamps.has(key)) return false;
+  state.stamps.add(key);
+  return true;
+}
+
+function spawnParticle(text){
+  const layer = document.getElementById('particleLayer');
+  const [xp,yp] = PATH[state.pos];
+  const w = layer.clientWidth, h = layer.clientHeight;
+  const p = document.createElement('div');
+  p.className='particle';
+  p.textContent = text;
+  p.style.left = (w*xp/100 - 8)+'px';
+  p.style.top = (h*yp/100 - 30)+'px';
+  layer.appendChild(p);
+  setTimeout(()=>p.remove(), 1000);
+}
+
+/* =========================================================
+   サイコロ & 移動
+========================================================= */
+const rollBtn = document.getElementById('rollBtn');
+const diceFace = document.getElementById('diceFace');
+
+rollBtn.addEventListener('click', ()=>{
+  if(state.busy || state.finished) return;
+  if(state.stamina<=0){
+    log('スタミナ切れ…！ からあげ屋か土産店で回復しよう。休憩して1マス進むよ。');
+    state.busy = true;
+    diceFace.textContent='💤';
+    setTimeout(()=>{ moveSteps(1); }, 400);
+    return;
+  }
+  state.busy = true;
+  rollBtn.disabled = true;
+  diceFace.classList.add('rolling');
+  sfxRoll();
+  let count=0;
+  const spin = setInterval(()=>{
+    diceFace.textContent = 1+Math.floor(Math.random()*6);
+    count++;
+    if(count>8){
+      clearInterval(spin);
+      diceFace.classList.remove('rolling');
+      const val = 1+Math.floor(Math.random()*6);
+      diceFace.textContent = val;
+      state.stamina = Math.max(0, state.stamina-1);
+      updateHud();
+      setTimeout(()=>moveSteps(val), 250);
+    }
+  },70);
+});
+
+function moveSteps(steps){
+  if(steps<=0){ afterMove(); return; }
+  playerToken.classList.remove('hop'); void playerToken.offsetWidth; playerToken.classList.add('hop');
+  sfxStep();
+  state.pos = (state.pos+1) % N;
+  placeToken();
+  const remain = steps-1;
+  if(remain<=0){ setTimeout(()=>afterMove(), 200); }
+  else { setTimeout(()=>moveSteps(remain), 190); }
+}
+
+function afterMove(){
+  state.turns++;
+  if(state.pos===0){ finishLoop(); return; }
+  resolveTile(BOARD[state.pos]);
+}
+
+/* =========================================================
+   マス処理
+========================================================= */
+function resolveTile(tile){
+  switch(tile.type){
+    case TILE_TYPES.NORMAL:
+      log('のどかな道が続く…特に何もなかった。');
+      endTurn(); break;
+    case TILE_TYPES.ITEM: {
+      const it = ITEM_POOL[Math.floor(Math.random()*ITEM_POOL.length)];
+      state.items.push(it);
+      const coin = 5+Math.floor(Math.random()*10);
+      state.coins += coin;
+      spawnParticle('+'+coin+'💰');
+      sfxCoin();
+      log(`「${it.name}」を見つけた！ コイン+${coin}`);
+      updateHud();
+      endTurn(); break;
+    }
+    case TILE_TYPES.GOURMET: {
+      const heal = 6+Math.floor(Math.random()*5);
+      state.stamina = Math.min(state.maxStamina, state.stamina+heal);
+      spawnParticle('+'+heal+'⚡');
+      sfxCoin();
+      log(`からあげでスタミナ+${heal}！ 元気が出てきた！`);
+      updateHud();
+      endTurn(); break;
+    }
+    case TILE_TYPES.REST:
+      log('ちょっと一休み…次のターンはそのまま進めるよ。');
+      endTurn(); break;
+    case TILE_TYPES.WARP_FWD: {
+      const nextLandmark = findNextLandmark(state.pos);
+      log('近道を発見！ 次の名所まで一気にワープ！');
+      state.pos = nextLandmark;
+      placeToken();
+      setTimeout(()=>resolveTile(BOARD[state.pos]), 300);
+      return;
+    }
+    case TILE_TYPES.WARP_BACK: {
+      state.pos = Math.max(0, state.pos-3);
+      placeToken();
+      log('道に迷って3マス戻ってしまった…トホホ。');
+      endTurn(); break;
+    }
+    case TILE_TYPES.LANDMARK:
+      openQuiz(tile.quiz); break;
+    case TILE_TYPES.MOVE:
+      openMoveInfo(tile.move); break;
+  }
+}
+
+function findNextLandmark(from){
+  for(let i=1;i<N;i++){
+    const idx = (from+i)%N;
+    if(BOARD[idx].type===TILE_TYPES.LANDMARK) return idx;
+    if(idx===0) return idx;
+  }
+  return from;
+}
+
+function endTurn(){ state.busy = false; rollBtn.disabled = false; }
+
+/* =========================================================
+   クイズモーダル（名所スタンプ）
+========================================================= */
+const modalLayer = document.getElementById('modalLayer');
+const modalTitle = document.getElementById('modalTitle');
+const modalBody = document.getElementById('modalBody');
+const modalChoices = document.getElementById('modalChoices');
+const modalFooter = document.getElementById('modalFooter');
+const modalOkBtn = document.getElementById('modalOkBtn');
+
+function openQuiz(qIdx){
+  const q = QUIZZES[qIdx];
+  modalTitle.textContent = `📍 ${q.name}`;
+  modalBody.textContent = q.fact + '\n\n' + q.q;
+  modalChoices.innerHTML = '';
+  modalFooter.style.display = 'none';
+  q.c.forEach((c,i)=>{
+    const b = document.createElement('button');
+    b.className='choice-btn';
+    b.textContent = c;
+    b.addEventListener('click', ()=>answerQuiz(i, q, b, qIdx));
+    modalChoices.appendChild(b);
+  });
+  modalLayer.style.display='flex';
+}
+
+function answerQuiz(i, q, btnEl, qIdx){
+  const btns = [...modalChoices.children];
+  btns.forEach(b=>b.style.pointerEvents='none');
+  const isNewStamp = addStamp('q'+qIdx);
+  if(isNewStamp) sfxStamp();
+  const stampMsg = isNewStamp ? '\n\n📮 「'+q.name+'」のスタンプをゲット！' : '';
+  if(i===q.a){
+    btnEl.classList.add('correct');
+    const coin = 20;
+    state.coins += coin;
+    state.quizCorrect++;
+    sfxCorrect();
+    modalBody.textContent += `\n\n✅ 正解！ コイン+${coin}` + stampMsg;
+  } else {
+    btnEl.classList.add('wrong');
+    btns[q.a].classList.add('correct');
+    sfxWrong();
+    modalBody.textContent += `\n\n❌ 残念…正解は「${q.c[q.a]}」` + stampMsg;
+  }
+  updateHud();
+  modalFooter.style.display='flex';
+}
+
+/* =========================================================
+   なかつ暮らしのヒミツ モーダル（移住ポイント）
+========================================================= */
+function openMoveInfo(mIdx){
+  const m = MOVE_INFOS[mIdx];
+  const isNewStamp = addStamp('m'+mIdx);
+  if(isNewStamp) sfxStamp(); else sfxCoin();
+  const coin = isNewStamp ? 25 : 8;
+  state.coins += coin;
+  spawnParticle('+'+coin+'💰');
+  updateHud();
+
+  modalTitle.textContent = `🏡 ${m.name}`;
+  modalBody.textContent = m.fact + (isNewStamp
+    ? `\n\n📮 新しいスタンプをゲット！ コイン+${coin}`
+    : `\n\n（このスタンプはもう集めたね）コイン+${coin}`);
+  modalChoices.innerHTML = '';
+  modalFooter.style.display = 'flex';
+  modalLayer.style.display = 'flex';
+}
+
+modalOkBtn.addEventListener('click', ()=>{ modalLayer.style.display='none'; endTurn(); });
+
+/* =========================================================
+   ゴール処理
+========================================================= */
+const RANKS = [
+  {min:380, rank:'SS', label:'もう中津市民！'},
+  {min:300, rank:'S',  label:'なかつ通'},
+  {min:220, rank:'A',  label:'なかつファン'},
+  {min:140, rank:'B',  label:'また来たいね'},
+  {min:0,   rank:'C',  label:'はじめまして'},
+];
+
+function finishLoop(){
+  state.busy = true;
+  sfxFanfare();
+  const itemBonus = state.items.length*10;
+  const staminaBonus = state.stamina*3;
+  const quizBonus = state.quizCorrect*5;
+  const stampBonus = state.stamps.size*8;
+  const total = state.coins + itemBonus + staminaBonus + quizBonus + stampBonus;
+  const rankInfo = RANKS.find(r=>total>=r.min);
+
+  document.getElementById('rCoin').textContent = state.coins;
+  document.getElementById('rItem').textContent = itemBonus+`（${state.items.length}点）`;
+  document.getElementById('rStamina').textContent = staminaBonus+`（残${state.stamina}）`;
+  document.getElementById('rQuiz').textContent = quizBonus+`（${state.quizCorrect}問正解）`;
+  document.getElementById('rStamp').textContent = stampBonus+`（${state.stamps.size}/${STAMP_TOTAL}個）`;
+  document.getElementById('rTotal').textContent = total;
+  document.getElementById('resultRank').textContent = rankInfo.rank;
+  document.getElementById('resultRankLabel').textContent = rankInfo.label;
+
+  const grid = document.getElementById('stampGrid');
+  grid.innerHTML = '';
+  QUIZZES.forEach((q,i)=>{
+    const got = state.stamps.has('q'+i);
+    grid.insertAdjacentHTML('beforeend', `<div class="stamp-badge ${got?'got':''}" title="${q.name}">${q.icon}</div>`);
+  });
+  MOVE_INFOS.forEach((m,i)=>{
+    const got = state.stamps.has('m'+i);
+    grid.insertAdjacentHTML('beforeend', `<div class="stamp-badge ${got?'got':''}" title="${m.name}">${m.icon}</div>`);
+  });
+  document.getElementById('completeBanner').style.display = (state.stamps.size===STAMP_TOTAL) ? 'block' : 'none';
+
+  state.bestScore = Math.max(total, state.bestScore);
+  document.getElementById('rBest').textContent = state.bestScore;
+
+  document.getElementById('gameScreen').style.display='none';
+  document.getElementById('resultScreen').style.display='flex';
+  state.finished = true;
+}
+
+document.getElementById('againBtn').addEventListener('click', ()=>{
+  resetState(true);
+  document.getElementById('resultScreen').style.display='none';
+  document.getElementById('gameScreen').style.display='flex';
+});
+document.getElementById('titleBackBtn').addEventListener('click', ()=>{
+  resetState(false);
+  document.getElementById('resultScreen').style.display='none';
+  document.getElementById('titleScreen').style.display='flex';
+});
+
+function resetState(keepLoop){
+  state.pos=0; state.coins=0; state.stamina=state.maxStamina; state.items=[]; state.quizCorrect=0;
+  state.turns=0; state.finished=false; state.busy=false;
+  state.loop = keepLoop ? state.loop+1 : 1;
+  if(!keepLoop){ state.stamps = new Set(); }
+  updateHud();
+  log('中津駅に到着した。さあ、暮らし発見の旅の始まりだ！');
+  renderBoard();
+  rollBtn.disabled=false;
+}
+
+/* =========================================================
+   起動
+========================================================= */
+document.getElementById('startBtn').addEventListener('click', startGame);
+function startGame(){
+  document.getElementById('titleScreen').style.display='none';
+  document.getElementById('gameScreen').style.display='flex';
+  playerToken.innerHTML = '<canvas width="60" height="69"></canvas>';
+  const pc = playerToken.querySelector('canvas');
+  drawAcorn(pc.getContext('2d'));
+  renderBoard();
+  updateHud();
+  beep(600,0.08,'sine',0.05);
+}
+
+window.addEventListener('resize', ()=>{ renderBoard(); });
+</script>
+</body>
+</html>

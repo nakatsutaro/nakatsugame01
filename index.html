@@ -5,27 +5,56 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>なかつ暮らしすごろく ～どんぐりちゃんと、ちょうどいい未来さがし～</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Mochiy+Pop+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Kaisei+Decol:wght@400;700&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
+/* =========================================================
+   なかつ暮らしすごろく ／ アートディレクション
+   「耶馬渓の朝霧 × 絵双六（和紙・木版・朱印）」
+   ・空は朝もやの淡いぼかし、稜線は遠いほど霧に溶ける
+   ・盤面は和紙の円札、名所は幟（のぼり）で名を掲げる
+   ・集めた場所には朱印がひとつ捺される
+========================================================= */
 :root{
-  --cream-top:#FFE9C2; --cream-mid:#FFF6E6; --cream-base:#FFFDF7;
-  --paper:rgba(255,251,240,0.72);
-  --paper-strong:rgba(255,251,240,0.92);
-  --paper-border:rgba(122,86,53,0.22);
-  --leaf:#8FC996; --leaf-deep:#5FA46A;
-  --sun:#FFC15E; --sun-deep:#F0A128;
-  --coral:#FF9B7A; --coral-deep:#F17A56;
-  --sky:#A9DDEA; --sky-deep:#57ABC4;
-  --plum:#C9A6E8; --plum-deep:#A47AD1;
-  --ink:#5A4430; --ink-dim:#8E7A62;
-  --shadow:0 14px 30px -14px rgba(107,75,51,0.35);
+  /* 墨・藍（文字と輪郭） */
+  --sumi:#232830;
+  --sumi-soft:#4C525E;
+  --ai:#2F5573;
+  --ai-deep:#1E3B52;
+
+  /* 和紙（面） */
+  --washi:#FCF8EC;
+  --washi-2:#F3ECDA;
+  --washi-3:#E5DCC3;
+  --washi-line:rgba(35,40,48,0.32);
+
+  /* 差し色 */
+  --shu:#C0392B;        /* 合元寺の赤壁 */
+  --shu-deep:#96271C;
+  --kin:#BE8F2E;        /* 金・柿 */
+  --kin-light:#E0B252;
+  --matsu:#31614F;      /* 耶馬渓の松 */
+  --matsu-light:#4E8A6D;
+  --mizu:#6E9CB0;       /* 中津城の堀 */
+
+  --rule:1px solid var(--washi-line);
+  --lift:0 2px 0 rgba(35,40,48,0.16), 0 14px 26px -14px rgba(50,70,90,0.5);
+  --lift-sm:0 1px 0 rgba(35,40,48,0.14), 0 8px 14px -10px rgba(50,70,90,0.45);
+
+  /* 和紙の繊維テクスチャ */
+  --fiber:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23f)' opacity='0.5'/%3E%3C/svg%3E");
 }
+
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-html,body{ margin:0; padding:0; width:100%;
+html,body{
+  margin:0; padding:0; width:100%;
   height:100vh; height:calc(var(--vh, 1vh) * 100); height:100dvh;
-  background:var(--cream-base); overflow:hidden; overscroll-behavior:none; user-select:none;
-  font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN',sans-serif; color:var(--ink); }
-.display-font{ font-family:'Mochiy Pop One', sans-serif; letter-spacing:0.5px; }
+  background:#C2D7E2; overflow:hidden; overscroll-behavior:none; user-select:none;
+  font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif; color:var(--sumi);
+  -webkit-font-smoothing:antialiased;
+}
+.display-font{ font-family:'Kaisei Decol',serif; }
+.brush-font{ font-family:'Yuji Syuku',serif; }
 
 #app{
   position:relative; width:100%; margin:0 auto;
@@ -33,241 +62,755 @@ html,body{ margin:0; padding:0; width:100%;
   max-width:920px; max-height:920px;
   overflow:hidden;
   padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom);
+  /* 朝もやのぼかし刷り。上は薄藍、地平に向かって光が抜ける */
   background:
-    radial-gradient(circle at 84% 8%, rgba(255,193,94,0.38), transparent 42%),
-    radial-gradient(circle at 10% 14%, rgba(169,221,234,0.36), transparent 44%),
-    radial-gradient(circle at 50% 100%, rgba(143,201,150,0.30), transparent 48%),
-    linear-gradient(160deg, var(--cream-top), var(--cream-mid) 55%, var(--cream-base));
+    radial-gradient(64% 38% at 72% 14%, rgba(255,253,244,0.9), transparent 68%),
+    linear-gradient(180deg,
+      #A6C2D6 0%,
+      #BDD3E0 15%,
+      #D3E2E7 30%,
+      #E4EDE8 44%,
+      #EFEFE2 56%,
+      #F6F2E4 68%,
+      #F1EFE3 82%,
+      #E2E4D6 100%);
 }
-.blob{ position:absolute; border-radius:50%; filter:blur(38px); opacity:0.5; pointer-events:none; animation:drift 12s ease-in-out infinite alternate; z-index:0; }
-@keyframes drift{ 0%{ transform:translate(0,0) scale(1);} 100%{ transform:translate(16px,-12px) scale(1.06);} }
 
-.hill{ position:absolute; left:-14%; width:128%; pointer-events:none; border-radius:50%; z-index:1; }
-.hill-back{ height:19%; bottom:-6%; background:linear-gradient(180deg, rgba(143,201,150,0.55), rgba(111,180,120,0.85)); }
-.hill-front{ height:12%; bottom:-8%; left:-20%; width:136%; background:linear-gradient(180deg, rgba(111,180,120,0.68), rgba(84,150,92,0.95)); }
+/* ---------- 背景：空／耶馬渓／堀 ---------- */
+#sceneSky{ position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+#sceneCastle{
+  position:absolute; left:50%; top:52%; transform:translate(-50%,-50%);
+  width:min(46%,300px); z-index:1; pointer-events:none;
+  filter:drop-shadow(0 10px 18px rgba(70,92,108,0.32));
+}
 
-/* ---------- paper surface ---------- */
+/* 谷を流れる朝霧 */
+.mist-a{ animation:mistDrift 26s ease-in-out infinite alternate; }
+.mist-b{ animation:mistDrift2 34s ease-in-out infinite alternate; }
+@keyframes mistDrift{ from{ transform:translateX(-4px); opacity:.55;} to{ transform:translateX(7px); opacity:.95;} }
+@keyframes mistDrift2{ from{ transform:translateX(6px); opacity:.9;} to{ transform:translateX(-5px); opacity:.5;} }
+
+/* 朝の鳥 */
+.birds{ animation:birdFly 42s linear infinite; }
+@keyframes birdFly{
+  0%{ transform:translate(-14px,26px); opacity:0;}
+  8%{ opacity:.75;}
+  88%{ opacity:.6;}
+  100%{ transform:translate(112px,8px); opacity:0;}
+}
+
+/* 朝日にひかる塵（光の粒） */
+.mote{
+  position:absolute; width:4px; height:4px; border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,0.95), rgba(255,250,230,0.18) 60%, transparent 70%);
+  z-index:2; pointer-events:none; opacity:0;
+  animation:driftUp 13s linear infinite;
+}
+@keyframes driftUp{
+  0%{ opacity:0; transform:translate(0,0) scale(0.6);}
+  12%{ opacity:.85;}
+  55%{ opacity:.5; transform:translate(18px,-42px) scale(1.1);}
+  100%{ opacity:0; transform:translate(-10px,-88px) scale(0.7);}
+}
+
+/* ---------- 和紙の面 ---------- */
 .glass{
-  background:linear-gradient(180deg, var(--paper-strong), var(--paper));
-  border:1px solid var(--paper-border);
-  border-radius:20px;
-  backdrop-filter:blur(10px) saturate(120%);
-  -webkit-backdrop-filter:blur(10px) saturate(120%);
-  box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,0.6);
+  position:relative;
+  background:linear-gradient(178deg, var(--washi) 0%, var(--washi-2) 74%, var(--washi-3) 100%);
+  border:var(--rule);
+  border-radius:6px;
+  box-shadow:var(--lift), inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -2px 6px rgba(150,110,60,0.12);
+}
+.glass::after{
+  content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background-image:var(--fiber); background-size:140px 140px;
+  opacity:0.16; mix-blend-mode:multiply;
 }
 
-/* ---------- title screen ---------- */
+/* ---------- タイトル ---------- */
 #titleScreen{
   position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:14px; text-align:center; padding:24px; z-index:50;
   overflow-y:auto; -webkit-overflow-scrolling:touch;
 }
 .game-logo{
-  font-size:clamp(22px,6vw,34px); line-height:1.45; z-index:2;
-  background:linear-gradient(90deg, var(--leaf-deep), var(--sun-deep) 55%, var(--coral-deep));
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  filter:drop-shadow(0 4px 14px rgba(255,193,94,0.35));
+  position:relative; z-index:2;
+  font-family:'Yuji Syuku',serif;
+  font-size:clamp(26px,7.4vw,42px); line-height:1.35; letter-spacing:0.14em;
+  color:#1F2A33;
+  text-shadow:0 1px 0 rgba(255,255,255,0.95), 0 0 22px rgba(255,255,255,0.85), 0 10px 26px rgba(90,110,130,0.28);
+  padding:0 6px;
+}
+.game-logo::before{
+  /* 落款のように朱の角印を添える */
+  content:''; position:absolute; left:50%; top:-16px; transform:translateX(-50%);
+  width:44px; height:3px; border-radius:2px;
+  background:linear-gradient(90deg, transparent, var(--shu), transparent);
 }
 .game-logo small{
-  display:block; margin-top:8px; font-family:'Zen Maru Gothic',sans-serif; font-weight:700;
-  font-size:0.42em; color:var(--ink-dim); letter-spacing:0.5px; -webkit-text-fill-color:var(--ink-dim);
+  display:block; margin-top:10px;
+  font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700;
+  font-size:0.34em; letter-spacing:0.16em; color:#4A5A66;
+  text-shadow:0 1px 0 rgba(255,255,255,0.9);
 }
-.tagline{ z-index:2; font-family:'Zen Maru Gothic',sans-serif; font-weight:900; font-size:12.5px;
-  color:var(--coral-deep); background:var(--paper-strong); border:1px dashed var(--paper-border);
-  padding:5px 14px; border-radius:999px; }
-#titleCanvasWrap{ z-index:2; filter:drop-shadow(0 12px 18px rgba(107,75,51,0.28)); animation:floatY 3.2s ease-in-out infinite; }
-@keyframes floatY{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-10px);} }
+.tagline{
+  z-index:2; font-family:'Kaisei Decol',serif; font-weight:700; font-size:13px; letter-spacing:0.06em;
+  color:var(--washi); background:linear-gradient(135deg, var(--shu), var(--shu-deep));
+  padding:7px 18px; border-radius:3px;
+  border:1px solid rgba(255,240,214,0.5);
+  box-shadow:var(--lift-sm), inset 0 1px 0 rgba(255,255,255,0.28);
+}
+#titleCanvasWrap{
+  z-index:2; position:relative;
+  filter:drop-shadow(0 14px 18px rgba(70,92,108,0.35));
+  animation:floatY 3.6s ease-in-out infinite;
+}
+#titleCanvasWrap::after{
+  content:''; position:absolute; left:50%; bottom:-10px; transform:translateX(-50%);
+  width:64%; height:12px; border-radius:50%;
+  background:radial-gradient(ellipse, rgba(80,100,115,0.38), transparent 70%);
+  animation:shadowPulse 3.6s ease-in-out infinite;
+}
+@keyframes floatY{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-12px);} }
+@keyframes shadowPulse{ 0%,100%{ transform:translateX(-50%) scale(1); opacity:.9;} 50%{ transform:translateX(-50%) scale(0.84); opacity:.6;} }
+
 .press-start{
-  z-index:2; font-weight:900; font-size:16px; color:#fff; cursor:pointer;
-  background:linear-gradient(135deg, var(--leaf), var(--leaf-deep));
-  padding:13px 30px; border-radius:999px; border:none;
-  box-shadow:0 10px 22px -6px rgba(95,164,106,0.55), inset 0 1px 0 rgba(255,255,255,0.4);
-  animation:pulseGlow 1.8s ease-in-out infinite;
+  z-index:2; cursor:pointer; position:relative;
+  font-family:'Kaisei Decol',serif; font-weight:700; font-size:17px; letter-spacing:0.08em;
+  color:#FFF8E6;
+  background:linear-gradient(180deg, var(--shu) 0%, var(--shu-deep) 100%);
+  padding:15px 34px; border-radius:4px;
+  border:1px solid rgba(255,238,208,0.55);
+  box-shadow:0 3px 0 var(--shu-deep), 0 16px 26px -12px rgba(150,39,28,0.9), inset 0 1px 0 rgba(255,255,255,0.3);
+  transition:transform .12s ease, box-shadow .12s ease;
 }
-@keyframes pulseGlow{ 0%,100%{ box-shadow:0 10px 22px -6px rgba(95,164,106,0.55);} 50%{ box-shadow:0 10px 30px -4px rgba(95,164,106,0.85);} }
-.small-note{ z-index:2; font-size:12.5px; font-weight:500; color:var(--ink-dim); max-width:88%; line-height:1.8; padding:10px 16px; }
+.press-start::after{
+  content:''; position:absolute; inset:4px; border:1px solid rgba(255,240,214,0.32); border-radius:2px; pointer-events:none;
+}
+.press-start:hover{ transform:translateY(-1px); }
+.press-start:active{ transform:translateY(3px); box-shadow:0 0 0 var(--shu-deep), 0 8px 14px -10px rgba(150,39,28,0.9); }
+.small-note{
+  z-index:2; font-size:12.5px; font-weight:500; color:#2A3C55; max-width:min(90%,440px); line-height:1.9;
+  padding:14px 18px; border-radius:5px;
+  background:linear-gradient(178deg, rgba(247,239,220,0.94), rgba(232,214,180,0.9));
+  border:1px solid rgba(35,31,39,0.2);
+  box-shadow:var(--lift-sm);
+  text-align:left;
+}
 
 /* ---------- HUD ---------- */
-#gameScreen{ position:absolute; inset:0; display:none; flex-direction:column; height:100%; }
-#topHud{ display:flex; gap:6px; padding:10px; align-items:center; flex-wrap:wrap; z-index:6; flex-shrink:0; }
+#gameScreen{ position:absolute; inset:0; display:none; flex-direction:column; height:100%; z-index:5; }
+#topHud{
+  display:flex; gap:6px; padding:10px 10px 8px; align-items:center; flex-wrap:wrap; z-index:6; flex-shrink:0;
+}
 .hud-chip{
-  display:flex; align-items:center; gap:6px; padding:6px 11px; border-radius:999px;
-  font-size:12.5px; font-weight:700; white-space:nowrap;
+  display:flex; align-items:center; gap:6px; padding:6px 10px; border-radius:4px;
+  font-size:12px; font-weight:700; white-space:nowrap; color:var(--sumi);
+  border-top:2px solid rgba(255,255,255,0.6);
 }
-.hud-chip b{ font-size:13.5px; }
-.hud-chip.coin b{ color:var(--sun-deep); }
-.hud-chip.loop b{ color:var(--plum-deep); }
-.hud-chip.stamp b{ color:var(--coral-deep); }
-#staminaBarWrap{ flex:1; min-width:82px; display:flex; align-items:center; gap:6px; }
-#staminaBar{ flex:1; height:10px; border-radius:999px; background:rgba(122,86,51,0.16); border:1px solid var(--paper-border); overflow:hidden; }
-#staminaFill{ height:100%; border-radius:999px; background:linear-gradient(90deg, var(--leaf), var(--leaf-deep)); transition:width .3s; box-shadow:0 0 8px rgba(95,164,106,0.5); }
-#itemStrip{ display:flex; gap:4px; }
+.hud-chip b{ font-family:'Kaisei Decol',serif; font-size:15px; font-variant-numeric:tabular-nums; line-height:1; }
+.hud-chip.coin b{ color:#9C6E12; }
+.hud-chip.loop b{ color:var(--ai); }
+.hud-chip.stamp b{ color:var(--shu); }
+#staminaBarWrap{ flex:1; min-width:86px; display:flex; align-items:center; gap:7px; }
+#staminaBar{
+  flex:1; height:11px; border-radius:2px; overflow:hidden;
+  background:linear-gradient(180deg, rgba(35,31,39,0.22), rgba(35,31,39,0.12));
+  border:1px solid rgba(35,31,39,0.28);
+  box-shadow:inset 0 1px 2px rgba(35,31,39,0.25);
+}
+#staminaFill{
+  height:100%;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.22) 0 2px, transparent 2px 7px),
+    linear-gradient(180deg, var(--matsu-light), var(--matsu));
+  transition:width .45s cubic-bezier(.2,.8,.2,1);
+  box-shadow:0 0 8px rgba(76,132,103,0.7), inset 0 1px 0 rgba(255,255,255,0.35);
+}
+#itemStrip{ display:flex; gap:4px; align-items:center; }
+#bgmBtn{
+  cursor:pointer; font-size:14px; line-height:1; padding:7px 10px;
+  font-family:inherit; color:var(--sumi);
+}
+#bgmBtn.muted{ opacity:.5; filter:grayscale(1); }
+#bgmBtn:active{ transform:translateY(1px); }
 .item-icon{
-  width:22px; height:22px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:12px;
-  background:rgba(201,166,232,0.28); border:1px solid rgba(201,166,232,0.6);
+  width:23px; height:23px; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:12px;
+  background:linear-gradient(180deg,#FBF2DC,#E6D3AC);
+  border:1px solid rgba(35,31,39,0.35);
+  box-shadow:0 1px 0 rgba(35,31,39,0.2), inset 0 1px 0 rgba(255,255,255,0.7);
+  animation:popIn .32s cubic-bezier(.2,1.5,.4,1);
 }
+@keyframes popIn{ from{ transform:scale(0.2) rotate(-12deg); opacity:0;} to{ transform:none; opacity:1;} }
 
-/* ---------- board ---------- */
+/* ---------- 盤面 ---------- */
 #boardWrap{ position:relative; flex:1; min-height:0; overflow:hidden; z-index:2; }
 #boardArea{ position:absolute; inset:0; }
-#pathSvg{ position:absolute; inset:0; width:100%; height:100%; filter:drop-shadow(0 0 5px rgba(255,193,94,0.4)); }
+#pathSvg{ position:absolute; inset:0; width:100%; height:100%; z-index:2; }
 
 .tile{
-  position:absolute; width:29px; height:29px; margin-left:-14.5px; margin-top:-14.5px;
+  position:absolute; width:30px; height:30px; margin-left:-15px; margin-top:-15px;
   border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px;
-  background:radial-gradient(circle at 35% 30%, rgba(255,255,255,0.85), rgba(255,246,224,0.55));
-  border:1px solid var(--paper-border);
-  box-shadow:0 6px 12px -6px rgba(107,75,51,0.35), inset 0 1px 0 rgba(255,255,255,0.7);
-  z-index:3; transition:transform .15s;
+  background:radial-gradient(circle at 34% 26%, #FFFCF1 0%, #F3E7CD 58%, #DECBA4 100%);
+  border:1.8px solid rgba(35,40,48,0.7);
+  box-shadow:0 2px 0 rgba(35,40,48,0.28), 0 9px 14px -8px rgba(60,80,95,0.55), inset 0 -3px 5px rgba(160,130,80,0.18);
+  z-index:3; transition:transform .18s cubic-bezier(.2,1.4,.4,1);
 }
-.tile.item{ background:radial-gradient(circle at 35% 30%, rgba(255,155,122,0.6), rgba(255,155,122,0.2)); }
-.tile.gourmet{ background:radial-gradient(circle at 35% 30%, rgba(255,193,94,0.6), rgba(255,193,94,0.2)); }
-.tile.rest{ background:radial-gradient(circle at 35% 30%, rgba(169,221,234,0.55), rgba(169,221,234,0.18)); }
-.tile.warpf, .tile.warpb{ background:radial-gradient(circle at 35% 30%, rgba(143,201,150,0.6), rgba(143,201,150,0.2)); }
+.tile > span{ line-height:1; filter:drop-shadow(0 1px 0 rgba(255,255,255,0.6)); }
+
+.tile.item{ border-color:var(--shu); box-shadow:0 2px 0 rgba(150,39,28,0.35), 0 9px 14px -8px rgba(60,80,95,0.55), inset 0 0 0 2px rgba(192,57,43,0.16); }
+.tile.gourmet{ border-color:#A97C1C; box-shadow:0 2px 0 rgba(120,86,16,0.35), 0 9px 14px -8px rgba(60,80,95,0.55), inset 0 0 0 2px rgba(200,148,48,0.2); }
+.tile.rest{ border-color:var(--mizu); box-shadow:0 2px 0 rgba(50,110,140,0.35), 0 9px 14px -8px rgba(60,80,95,0.55), inset 0 0 0 2px rgba(94,147,174,0.2); }
+.tile.warpf, .tile.warpb{ border-color:var(--matsu); box-shadow:0 2px 0 rgba(46,90,72,0.4), 0 9px 14px -8px rgba(60,80,95,0.55), inset 0 0 0 2px rgba(76,132,103,0.2); }
+
 .tile.move{
-  width:37px; height:37px; margin-left:-18.5px; margin-top:-18.5px; font-size:16px;
-  background:radial-gradient(circle at 35% 30%, rgba(201,166,232,0.65), rgba(201,166,232,0.22));
-  border:2px dashed rgba(164,122,209,0.85);
-  box-shadow:0 7px 16px -6px rgba(107,75,51,0.3), 0 0 12px rgba(201,166,232,0.4), inset 0 1px 0 rgba(255,255,255,0.5);
+  width:38px; height:38px; margin-left:-19px; margin-top:-19px; font-size:17px;
+  border:2px solid var(--ai);
+  box-shadow:0 2px 0 rgba(27,48,80,0.45), 0 12px 18px -8px rgba(60,80,95,0.6),
+             inset 0 0 0 3px rgba(44,74,114,0.12);
 }
 .tile.landmark{
-  width:43px; height:43px; margin-left:-21.5px; margin-top:-21.5px; font-size:19px;
-  background:radial-gradient(circle at 35% 30%, rgba(255,193,94,0.68), rgba(255,193,94,0.24));
-  border:2px dashed rgba(240,161,40,0.9);
-  box-shadow:0 8px 18px -6px rgba(107,75,51,0.35), 0 0 16px rgba(255,193,94,0.4), inset 0 1px 0 rgba(255,255,255,0.55);
+  width:44px; height:44px; margin-left:-22px; margin-top:-22px; font-size:20px;
+  border:2px solid #8E6512;
+  box-shadow:0 2px 0 rgba(120,86,16,0.5), 0 14px 20px -8px rgba(60,80,95,0.62),
+             inset 0 0 0 3px rgba(200,148,48,0.22), 0 0 20px rgba(233,187,85,0.28);
 }
 .tile.start{
-  width:52px; height:52px; margin-left:-26px; margin-top:-26px; font-size:23px;
-  background:radial-gradient(circle at 35% 30%, rgba(143,201,150,0.8), rgba(143,201,150,0.28));
-  border:2px solid rgba(95,164,106,0.9);
-  box-shadow:0 8px 20px -6px rgba(107,75,51,0.35), 0 0 20px rgba(143,201,150,0.5), inset 0 1px 0 rgba(255,255,255,0.6);
+  width:54px; height:54px; margin-left:-27px; margin-top:-27px; font-size:24px;
+  border:2.5px solid var(--matsu);
+  box-shadow:0 3px 0 rgba(46,90,72,0.55), 0 16px 24px -8px rgba(60,80,95,0.62),
+             inset 0 0 0 4px rgba(76,132,103,0.18), 0 0 22px rgba(76,132,103,0.35);
 }
+
+/* 幟（のぼり）＝名所・ヒミツの名を掲げる */
 .tile .tlabel{
-  position:absolute; top:-18px; left:50%; transform:translateX(-50%);
-  font-size:8.5px; font-weight:700; white-space:nowrap; color:var(--ink);
-  background:var(--paper-strong); border:1px solid var(--paper-border);
-  padding:2px 6px; border-radius:999px; pointer-events:none;
-  max-width:min(64px, 20vw); overflow:hidden; text-overflow:ellipsis;
+  position:absolute; top:-24px; left:50%; transform:translateX(-50%);
+  font-family:'Kaisei Decol',serif; font-size:9px; font-weight:700; letter-spacing:0.02em;
+  white-space:nowrap; color:var(--sumi);
+  background:linear-gradient(180deg,#FDF6E4,#EBDBB6);
+  border:1px solid rgba(35,31,39,0.42);
+  padding:3px 7px 7px; border-radius:2px;
+  clip-path:polygon(0 0, 100% 0, 100% 68%, 50% 100%, 0 68%);
+  box-shadow:0 6px 10px -7px rgba(60,80,95,0.75);
+  pointer-events:none;
+  max-width:min(68px, 21vw); overflow:hidden; text-overflow:ellipsis;
 }
-.tile .tlabel.anchor-left{ left:0; transform:translateX(-6px); }
-.tile .tlabel.anchor-right{ left:auto; right:0; transform:translateX(6px); }
-.tile .tlabel.row-b{ top:-31px; }
-.tile.active-glow{ animation:tileGlow 1s infinite; }
-@keyframes tileGlow{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.12);} }
+.tile .tlabel.anchor-left{ left:0; transform:translateX(-7px); }
+.tile .tlabel.anchor-right{ left:auto; right:0; transform:translateX(7px); }
+.tile .tlabel.row-b{ top:-38px; }
+.tile.active-glow{ animation:tileGlow 1.1s ease-in-out infinite; }
+@keyframes tileGlow{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.14);} }
 
+/* 訪れた場所に捺される朱印 */
+.tile .seal{
+  position:absolute; right:-5px; top:-5px; width:15px; height:15px; border-radius:50%;
+  border:2px solid var(--shu); background:rgba(192,57,43,0.14);
+  box-shadow:0 0 0 1px rgba(255,246,224,0.5), 0 2px 5px rgba(60,80,95,0.45);
+  transform:rotate(-14deg); pointer-events:none;
+  animation:sealPress .34s cubic-bezier(.2,1.6,.4,1);
+}
+.tile .seal::before{
+  content:''; position:absolute; inset:3px; border-radius:50%; background:var(--shu); opacity:.75;
+}
+@keyframes sealPress{ from{ transform:rotate(-14deg) scale(2.2); opacity:0;} to{ transform:rotate(-14deg) scale(1); opacity:1;} }
+
+/* ---------- どんぐりちゃん ---------- */
 #playerToken{
-  position:absolute; width:38px; height:44px; margin-left:-19px; margin-top:-38px;
-  z-index:10; transition:left .18s ease, top .18s ease;
-  filter:drop-shadow(0 8px 8px rgba(107,75,51,0.4));
-  animation:idleBob 1.6s ease-in-out infinite;
+  position:absolute; width:40px; height:46px; margin-left:-20px; margin-top:-40px;
+  z-index:10; transition:left .2s cubic-bezier(.3,.7,.4,1), top .2s cubic-bezier(.3,.7,.4,1);
+  animation:idleBob 2s ease-in-out infinite;
 }
-#playerToken.hop{ animation:hop .35s cubic-bezier(.3,.8,.4,1); }
-@keyframes hop{ 0%{ transform:translateY(0) scale(1,1);} 35%{ transform:translateY(-17px) scale(0.95,1.08);} 100%{ transform:translateY(0) scale(1,1);} }
+#playerToken .token-shadow{
+  position:absolute; left:50%; bottom:-5px; transform:translateX(-50%);
+  width:26px; height:8px; border-radius:50%;
+  background:radial-gradient(ellipse, rgba(70,92,108,0.45), transparent 72%);
+}
+#playerToken canvas{ position:relative; display:block; filter:drop-shadow(0 6px 7px rgba(60,80,95,0.42)); }
+#playerToken.hop canvas{ animation:hop .35s cubic-bezier(.3,.8,.4,1); }
+#playerToken.hop .token-shadow{ animation:shadowSquash .35s ease-out; }
+@keyframes hop{
+  0%{ transform:translateY(0) scale(1,1);}
+  22%{ transform:translateY(-8px) scale(0.93,1.1);}
+  40%{ transform:translateY(-19px) scale(0.97,1.05);}
+  72%{ transform:translateY(0) scale(1.1,0.9);}
+  100%{ transform:translateY(0) scale(1,1);}
+}
+@keyframes shadowSquash{ 0%,100%{ transform:translateX(-50%) scale(1); opacity:1;} 45%{ transform:translateX(-50%) scale(0.62); opacity:.45;} }
 @keyframes idleBob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-3px);} }
-#playerToken canvas{ width:100%; height:100%; }
 
-/* ---------- bottom panel ---------- */
-#bottomPanel{ position:relative; z-index:6; flex-shrink:0; margin:8px 10px 10px; padding:12px 14px; display:flex; gap:10px; align-items:stretch; }
-#msgLog{ flex:1; min-height:56px; font-size:13.5px; font-weight:500; line-height:1.7; padding:6px 4px; color:var(--ink); }
-#diceZone{ width:108px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; }
+/* ---------- 下段パネル ---------- */
+#bottomPanel{
+  position:relative; z-index:6; flex-shrink:0; margin:8px 10px 10px; padding:14px 14px 12px;
+  display:flex; gap:12px; align-items:stretch;
+  border-top:none;
+}
+#bottomPanel::before{
+  /* 木の桟（さん） */
+  content:''; position:absolute; left:0; right:0; top:0; height:7px; border-radius:6px 6px 0 0;
+  background:linear-gradient(180deg,#8C6239,#5F3E20);
+  box-shadow:inset 0 1px 0 rgba(255,225,180,0.35);
+}
+#msgLog{
+  flex:1; min-height:60px; font-size:13.5px; font-weight:500; line-height:1.85; padding:4px 2px;
+  color:#2A2430; letter-spacing:0.01em;
+}
+#diceZone{ width:112px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px; }
+
+/* 骰子（さいころ）：実際の目を描く */
 #diceFace{
-  width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center;
-  font-size:23px; font-weight:900; color:#4A3016;
-  background:linear-gradient(145deg, #fff, #FFEFD6);
-  box-shadow:0 10px 16px -6px rgba(107,75,51,0.35), inset 0 1px 0 rgba(255,255,255,0.9);
-  transform-style:preserve-3d;
+  position:relative; width:54px; height:54px; border-radius:9px;
+  display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr);
+  padding:7px; gap:1px;
+  background:linear-gradient(150deg,#FFFDF5 0%,#F6E9CE 55%,#E2CDA2 100%);
+  border:1px solid rgba(35,31,39,0.35);
+  box-shadow:0 4px 0 rgba(35,31,39,0.22), 0 14px 18px -10px rgba(60,80,95,0.6),
+             inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -4px 8px rgba(160,120,70,0.22);
+  align-items:center; justify-items:center;
+  font-family:'Kaisei Decol',serif; font-size:22px; font-weight:700; color:var(--sumi);
 }
-#diceFace.rolling{ animation:diceRoll .12s linear infinite; }
-@keyframes diceRoll{ 0%{ transform:rotate(0deg) scale(1);} 50%{ transform:rotate(180deg) scale(0.92);} 100%{ transform:rotate(360deg) scale(1);} }
+#diceFace .pip{
+  width:9px; height:9px; border-radius:50%;
+  background:radial-gradient(circle at 34% 30%, #55505C, #1C1820 70%);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,0.3), 0 1px 1px rgba(255,255,255,0.5);
+}
+#diceFace .pip.one{ background:radial-gradient(circle at 34% 30%, #D9584A, var(--shu-deep) 70%); }
+#diceFace .glyph{ grid-column:1 / -1; grid-row:1 / -1; }
+#diceFace.rolling{ animation:diceRoll .34s cubic-bezier(.4,.1,.6,.9) infinite; }
+@keyframes diceRoll{
+  0%{ transform:rotate(0) translateY(0) scale(1);}
+  30%{ transform:rotate(140deg) translateY(-9px) scale(0.9);}
+  60%{ transform:rotate(255deg) translateY(2px) scale(1.05);}
+  100%{ transform:rotate(360deg) translateY(0) scale(1);}
+}
+#diceFace.landed{ animation:diceLand .4s cubic-bezier(.2,1.6,.35,1); }
+@keyframes diceLand{ 0%{ transform:scale(1.22,0.8);} 55%{ transform:scale(0.94,1.08);} 100%{ transform:scale(1);} }
+
+/* ---------- ボタン ---------- */
 .btn{
-  font-family:'Zen Maru Gothic',sans-serif; font-weight:900; font-size:14px; color:#4A3016; cursor:pointer;
-  background:linear-gradient(135deg, var(--sun), var(--sun-deep));
-  border:none; padding:10px 18px; border-radius:999px;
-  box-shadow:0 8px 16px -6px rgba(240,161,40,0.5), inset 0 1px 0 rgba(255,255,255,0.5);
+  position:relative; cursor:pointer;
+  font-family:'Kaisei Decol',serif; font-weight:700; font-size:14px; letter-spacing:0.05em;
+  color:#FFF8E6;
+  background:linear-gradient(180deg, var(--shu) 0%, var(--shu-deep) 100%);
+  border:1px solid rgba(255,238,208,0.5); padding:11px 20px; border-radius:4px;
+  box-shadow:0 3px 0 var(--shu-deep), 0 12px 18px -10px rgba(150,39,28,0.85), inset 0 1px 0 rgba(255,255,255,0.28);
+  transition:transform .1s ease, box-shadow .1s ease;
 }
-.btn:active{ transform:translateY(2px); }
-.btn:disabled{ opacity:.35; cursor:default; }
-.btn.secondary{ background:linear-gradient(135deg, var(--sky), var(--sky-deep)); box-shadow:0 8px 16px -6px rgba(87,171,196,0.5), inset 0 1px 0 rgba(255,255,255,0.5); color:#0F3A45; }
+.btn::after{ content:''; position:absolute; inset:3px; border:1px solid rgba(255,240,214,0.28); border-radius:2px; pointer-events:none; }
+.btn:active{ transform:translateY(3px); box-shadow:0 0 0 var(--shu-deep), 0 6px 10px -8px rgba(150,39,28,0.9); }
+.btn:disabled{ opacity:.4; cursor:default; box-shadow:0 3px 0 rgba(35,31,39,0.25); }
+.btn.secondary{
+  color:#F4FBFF;
+  background:linear-gradient(180deg, #3E6E88 0%, #234A61 100%);
+  box-shadow:0 3px 0 #1B3B4D, 0 12px 18px -10px rgba(27,59,77,0.85), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.btn.secondary:active{ box-shadow:0 0 0 #1B3B4D, 0 6px 10px -8px rgba(27,59,77,0.9); }
 a.btn{ display:inline-block; text-decoration:none; text-align:center; }
+.btn:focus-visible, .press-start:focus-visible, .choice-btn:focus-visible{
+  outline:3px solid var(--kin-light); outline-offset:3px;
+}
 
-/* ---------- modal ---------- */
-#modalLayer{ position:absolute; inset:0; z-index:40; display:none; align-items:flex-end; justify-content:center; background:rgba(90,68,48,0.42); backdrop-filter:blur(3px); }
-#modalBox{ width:100%; max-width:640px; margin:0 12px 12px; padding:18px; animation:slideUp .25s ease; }
-@keyframes slideUp{ from{ transform:translateY(24px); opacity:0;} to{ transform:translateY(0); opacity:1;} }
-#modalTitle{ font-size:16.5px; font-weight:900; color:var(--coral-deep); margin-bottom:8px; }
-#modalBody{ font-size:14px; font-weight:500; line-height:1.9; white-space:pre-wrap; color:var(--ink); }
-#modalChoices{ display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+/* ---------- 巻物モーダル ---------- */
+#modalLayer{
+  position:absolute; inset:0; z-index:40; display:none; align-items:flex-end; justify-content:center;
+  background:radial-gradient(120% 80% at 50% 100%, rgba(120,145,160,0.32), rgba(40,56,68,0.55));
+  backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
+}
+#modalBox{
+  width:100%; max-width:640px; margin:0 12px 12px; padding:20px 20px 18px;
+  border-radius:4px;
+  animation:unroll .34s cubic-bezier(.2,.9,.3,1);
+  transform-origin:bottom center;
+}
+#modalBox::before{
+  /* 巻物の軸 */
+  content:''; position:absolute; left:-6px; right:-6px; top:-5px; height:11px; border-radius:6px;
+  background:linear-gradient(180deg,#A97C4A,#6B4526);
+  box-shadow:0 1px 0 rgba(255,230,190,0.35) inset, 0 4px 8px -4px rgba(12,20,34,0.8);
+}
+@keyframes unroll{
+  from{ transform:translateY(18px) scaleY(0.72); opacity:0;}
+  to{ transform:translateY(0) scaleY(1); opacity:1;}
+}
+#modalTitle{
+  font-family:'Kaisei Decol',serif; font-size:17px; font-weight:700; color:var(--shu-deep);
+  margin:4px 0 10px; padding-bottom:9px; letter-spacing:0.03em;
+  border-bottom:2px solid rgba(192,57,43,0.28);
+}
+#modalBody{
+  font-size:14px; font-weight:500; line-height:2.0; white-space:pre-wrap; color:#2A2430;
+}
+#modalChoices{ display:flex; flex-direction:column; gap:9px; margin-top:14px; }
+/* 木札 */
 .choice-btn{
-  text-align:left; background:rgba(255,251,240,0.55); border:1px solid var(--paper-border); color:var(--ink);
-  font-family:'Zen Maru Gothic',sans-serif; font-weight:700; font-size:14px; padding:11px 14px; border-radius:14px; cursor:pointer;
+  position:relative; text-align:left; cursor:pointer;
+  font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:14px;
+  color:#2A2430; padding:12px 14px 12px 20px; border-radius:3px;
+  background:linear-gradient(180deg,#FBF3DF,#EADAB4);
+  border:1px solid rgba(35,31,39,0.32);
+  box-shadow:0 2px 0 rgba(35,31,39,0.16), inset 0 1px 0 rgba(255,255,255,0.75);
+  transition:transform .1s ease, box-shadow .1s ease, background .15s ease;
 }
-.choice-btn:hover{ background:rgba(255,251,240,0.9); }
-.choice-btn.correct{ background:rgba(143,201,150,0.4); border-color:var(--leaf-deep); color:#2C4A30; }
-.choice-btn.wrong{ background:rgba(255,155,122,0.4); border-color:var(--coral-deep); color:#5A2C1A; }
-#modalFooter{ margin-top:12px; display:flex; justify-content:flex-end; }
+.choice-btn::before{
+  content:''; position:absolute; left:0; top:0; bottom:0; width:5px; border-radius:3px 0 0 3px;
+  background:linear-gradient(180deg, var(--kin-light), var(--kin));
+}
+.choice-btn:hover{ transform:translateX(2px); background:linear-gradient(180deg,#FFFAEC,#F0E2BF); }
+.choice-btn:active{ transform:translateY(2px); box-shadow:none; }
+.choice-btn.correct{
+  background:linear-gradient(180deg,#E4F0E2,#C6DFC7); border-color:var(--matsu); color:#1D3A2C;
+}
+.choice-btn.correct::before{ background:linear-gradient(180deg,var(--matsu-light),var(--matsu)); }
+.choice-btn.wrong{
+  background:linear-gradient(180deg,#F6DCD6,#E7BCB3); border-color:var(--shu); color:#63201A;
+}
+.choice-btn.wrong::before{ background:linear-gradient(180deg,#D9584A,var(--shu-deep)); }
+#modalFooter{ margin-top:14px; display:flex; justify-content:flex-end; }
 
-/* ---------- result screen ---------- */
-#resultScreen{ position:absolute; inset:0; z-index:60; display:none; align-items:center; justify-content:center; background:rgba(90,68,48,0.55); padding:18px; overflow-y:auto; }
-#resultBox{ width:100%; max-width:420px; text-align:center; padding:24px 20px; margin:auto; }
+/* ---------- 結果：朱印帳 ---------- */
+#resultScreen{
+  position:absolute; inset:0; z-index:60; display:none; align-items:center; justify-content:center;
+  background:radial-gradient(120% 80% at 50% 30%, rgba(140,165,178,0.4), rgba(38,54,66,0.68));
+  padding:18px; overflow-y:auto;
+}
+#resultBox{
+  width:100%; max-width:430px; text-align:center; padding:26px 22px 22px; margin:auto;
+  border-radius:5px;
+}
+#resultBox::before{
+  content:''; position:absolute; inset:9px; border:1px solid rgba(192,57,43,0.28); border-radius:2px; pointer-events:none;
+}
+.result-eyebrow{
+  font-family:'Kaisei Decol',serif; font-size:12.5px; font-weight:700; letter-spacing:0.18em;
+  color:#8E6512;
+}
 #resultRank{
-  font-family:'Mochiy Pop One',sans-serif; font-size:50px; margin:4px 0 0;
-  background:linear-gradient(90deg, var(--sun-deep), var(--coral-deep)); -webkit-background-clip:text; background-clip:text; color:transparent;
-  filter:drop-shadow(0 4px 12px rgba(255,193,94,0.35));
+  position:relative; display:inline-flex; align-items:center; justify-content:center;
+  width:104px; height:104px; margin:10px auto 0; border-radius:50%;
+  font-family:'Kaisei Decol',serif; font-weight:700; font-size:46px; line-height:1;
+  color:#FFF6E4;
+  background:radial-gradient(circle at 35% 28%, #D9584A, var(--shu) 55%, var(--shu-deep));
+  border:3px solid rgba(255,246,224,0.85);
+  box-shadow:0 4px 0 rgba(150,39,28,0.5), 0 20px 30px -14px rgba(150,39,28,0.9), inset 0 2px 6px rgba(255,255,255,0.28);
+  animation:sealDrop .5s cubic-bezier(.2,1.5,.35,1);
 }
-#resultRankLabel{ display:block; font-size:14px; font-weight:900; color:var(--coral-deep); margin-bottom:8px; }
-.result-row{ display:flex; justify-content:space-between; font-size:13.5px; font-weight:700; padding:7px 2px; border-bottom:1px dashed var(--paper-border); color:var(--ink); text-align:left;}
-#stampGrid{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:12px 0; }
-.stamp-badge{ width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px;
-  background:rgba(201,166,232,0.15); border:2px dashed rgba(164,122,209,0.4); opacity:0.35; filter:grayscale(0.6); }
-.stamp-badge.got{ opacity:1; filter:none; background:rgba(201,166,232,0.35); border-color:rgba(164,122,209,0.9); box-shadow:0 0 8px rgba(201,166,232,0.5); }
-#completeBanner{ display:none; background:linear-gradient(135deg, rgba(143,201,150,0.35), rgba(255,193,94,0.35)); border:1px dashed var(--leaf-deep); border-radius:14px; padding:10px; font-size:13px; font-weight:900; color:#2C4A30; margin-bottom:10px; }
-#ctaBox{ margin-top:16px; padding-top:14px; border-top:1px dashed var(--paper-border); display:flex; flex-direction:column; gap:8px; }
-#ctaBox .cta-lead{ font-size:12.5px; font-weight:900; color:var(--ink-dim); margin-bottom:2px; }
+@keyframes sealDrop{ from{ transform:scale(2) rotate(-16deg); opacity:0;} to{ transform:scale(1) rotate(0); opacity:1;} }
+#resultRankLabel{
+  display:block; font-family:'Kaisei Decol',serif; font-size:15px; font-weight:700;
+  color:var(--shu-deep); margin:10px 0 6px; letter-spacing:0.06em;
+}
+.result-row{
+  display:flex; justify-content:space-between; font-size:13px; font-weight:700;
+  padding:8px 4px; border-bottom:1px dashed rgba(35,31,39,0.24);
+  color:#2A2430; text-align:left;
+}
+.result-row span:last-child{ font-family:'Kaisei Decol',serif; font-variant-numeric:tabular-nums; }
+.result-row.total{ font-size:15px; color:var(--shu-deep); border-bottom:2px solid rgba(192,57,43,0.3); }
 
+/* 朱印帳の見開き */
+.stamp-book{
+  position:relative; margin:14px 0 6px; padding:14px 10px 12px; border-radius:3px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 25px, rgba(35,40,48,0.07) 25px 26px),
+    linear-gradient(180deg,#FDFAF0,#F1EAD6);
+  border:1px solid rgba(35,40,48,0.22);
+  box-shadow:inset 0 2px 8px rgba(120,100,70,0.14);
+}
+.stamp-book::before{
+  /* 中央の折り目 */
+  content:''; position:absolute; left:50%; top:6px; bottom:6px; width:3px; transform:translateX(-50%);
+  background:linear-gradient(90deg, transparent, rgba(120,100,70,0.28), rgba(255,255,255,0.85), rgba(120,100,70,0.28), transparent);
+  pointer-events:none;
+}
+#stampGrid{ position:relative; display:flex; flex-wrap:wrap; gap:7px; justify-content:center; }
+
+.result-row{ animation:rowIn .4s cubic-bezier(.2,.8,.3,1) backwards; }
+@keyframes rowIn{ from{ opacity:0; transform:translateY(8px);} to{ opacity:1; transform:none;} }
+.stamp-badge{
+  width:34px; height:34px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:15px;
+  background:rgba(35,31,39,0.05);
+  border:1px dashed rgba(35,31,39,0.3);
+  opacity:0.4; filter:grayscale(0.85);
+}
+.stamp-badge.got{
+  opacity:1; filter:none;
+  background:linear-gradient(180deg, rgba(192,57,43,0.16), rgba(192,57,43,0.06));
+  border:2px solid var(--shu); border-radius:50%;
+  box-shadow:0 0 0 1px rgba(255,246,224,0.6), 0 4px 8px -4px rgba(150,39,28,0.7);
+  animation:sealPress .4s cubic-bezier(.2,1.6,.4,1) backwards;
+}
+#completeBanner{
+  display:none; margin:12px 0 4px; padding:12px; border-radius:4px;
+  font-family:'Kaisei Decol',serif; font-size:13px; font-weight:700; color:#FFF6E4; line-height:1.7;
+  background:linear-gradient(135deg, var(--matsu), #1E3F31);
+  border:1px solid rgba(255,246,224,0.5);
+  box-shadow:var(--lift-sm), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+#ctaBox{
+  margin-top:18px; padding-top:16px; border-top:2px solid rgba(35,31,39,0.18);
+  display:flex; flex-direction:column; gap:9px;
+}
+#ctaBox .cta-lead{
+  font-family:'Kaisei Decol',serif; font-size:13px; font-weight:700; color:#5A4634; margin-bottom:3px;
+}
+
+/* ---------- 演出 ---------- */
 #particleLayer{ position:absolute; inset:0; pointer-events:none; z-index:20; }
-.particle{ position:absolute; font-size:14px; font-weight:900; color:var(--sun-deep); animation:floatUp 1s ease-out forwards; }
-@keyframes floatUp{ 0%{ opacity:1; transform:translateY(0) scale(1);} 100%{ opacity:0; transform:translateY(-42px) scale(1.3);} }
+.particle{
+  position:absolute; font-family:'Kaisei Decol',serif; font-size:15px; font-weight:700;
+  color:var(--shu-deep); text-shadow:0 1px 0 rgba(255,255,255,0.95), 0 0 10px rgba(255,255,255,0.9), 0 2px 6px rgba(90,110,130,0.4);
+  animation:floatUp 1.05s cubic-bezier(.2,.8,.3,1) forwards;
+}
+@keyframes floatUp{
+  0%{ opacity:0; transform:translateY(6px) scale(0.7);}
+  18%{ opacity:1; transform:translateY(-4px) scale(1.15);}
+  100%{ opacity:0; transform:translateY(-50px) scale(1);}
+}
+/* 着地の砂ぼこり */
+.dust{
+  position:absolute; width:7px; height:7px; border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,0.95), rgba(200,190,165,0.5) 60%, transparent 70%);
+  pointer-events:none; animation:puff .6s ease-out forwards;
+}
+@keyframes puff{
+  0%{ opacity:.9; transform:translateY(0) scale(0.4);}
+  100%{ opacity:0; transform:translateY(-9px) scale(1.9);}
+}
+
+/* 着地の波紋 */
+.ripple{
+  position:absolute; width:20px; height:20px; margin:-10px 0 0 -10px; border-radius:50%;
+  border:2px solid rgba(192,57,43,0.6); pointer-events:none;
+  animation:rippleOut .62s cubic-bezier(.2,.7,.3,1) forwards;
+}
+@keyframes rippleOut{
+  0%{ opacity:.85; transform:scale(0.35);}
+  100%{ opacity:0; transform:scale(2.6);}
+}
+
+/* ワープの光跡 */
+.warp-dot{
+  position:absolute; width:12px; height:12px; margin:-6px 0 0 -6px; border-radius:50%;
+  background:radial-gradient(circle, #FFF6D8, rgba(224,178,82,0.75) 55%, transparent 72%);
+  pointer-events:none; animation:warpFade .55s ease-out forwards;
+  box-shadow:0 0 12px rgba(224,178,82,0.9);
+}
+@keyframes warpFade{
+  0%{ opacity:0; transform:scale(0.4);}
+  30%{ opacity:1; transform:scale(1.25);}
+  100%{ opacity:0; transform:scale(0.6);}
+}
+#playerToken.warping canvas{ animation:warpStretch .5s ease-in-out; }
+@keyframes warpStretch{
+  0%{ transform:scale(1,1);}
+  35%{ transform:scale(0.55,1.5) translateY(-6px); filter:brightness(1.5);}
+  70%{ transform:scale(1.25,0.8);}
+  100%{ transform:scale(1,1);}
+}
+
+/* 道に迷ったときの揺れ */
+#boardWrap.shake{ animation:shake .42s cubic-bezier(.36,.07,.19,.97); }
+@keyframes shake{
+  0%,100%{ transform:translateX(0);}
+  15%{ transform:translateX(-7px) rotate(-0.4deg);}
+  35%{ transform:translateX(6px) rotate(0.4deg);}
+  55%{ transform:translateX(-4px);}
+  78%{ transform:translateX(3px);}
+}
+#playerToken.dizzy canvas{ animation:dizzy .7s ease-in-out; }
+@keyframes dizzy{
+  0%,100%{ transform:rotate(0);}
+  25%{ transform:rotate(-13deg);}
+  55%{ transform:rotate(11deg);}
+  80%{ transform:rotate(-5deg);}
+}
+
+.confetti{
+  position:absolute; width:8px; height:11px; border-radius:2px 60% 2px 60%;
+  animation:fallLeaf 2.6s ease-in forwards; pointer-events:none;
+}
+@keyframes fallLeaf{
+  0%{ opacity:0; transform:translateY(-30px) rotate(0);}
+  10%{ opacity:1;}
+  100%{ opacity:0; transform:translateY(85vh) rotate(520deg);}
+}
 
 @media (max-width:420px){
-  #diceZone{ width:90px; }
-  .tile{ width:23px; height:23px; margin-left:-11.5px; margin-top:-11.5px; }
-  .tile.move{ width:32px; height:32px; margin-left:-16px; margin-top:-16px; }
-  .tile.landmark{ width:35px; height:35px; margin-left:-17.5px; margin-top:-17.5px; }
-  .tile.start{ width:41px; height:41px; margin-left:-20.5px; margin-top:-20.5px; }
-  .tile .tlabel{ font-size:7.8px; padding:1.5px 5px; max-width:min(52px, 22vw); top:-15px; }
-  .tile .tlabel.row-b{ top:-26px; }
+  #diceZone{ width:94px; }
+  #diceFace{ width:48px; height:48px; padding:6px; }
+  #diceFace .pip{ width:8px; height:8px; }
+  .tile{ width:24px; height:24px; margin-left:-12px; margin-top:-12px; }
+  .tile.move{ width:33px; height:33px; margin-left:-16.5px; margin-top:-16.5px; font-size:15px; }
+  .tile.landmark{ width:36px; height:36px; margin-left:-18px; margin-top:-18px; font-size:17px; }
+  .tile.start{ width:43px; height:43px; margin-left:-21.5px; margin-top:-21.5px; font-size:20px; }
+  .tile .tlabel{ font-size:8px; padding:2px 5px 6px; max-width:min(56px, 23vw); top:-21px; }
+  .tile .tlabel.row-b{ top:-33px; }
+  .tile .seal{ width:12px; height:12px; right:-4px; top:-4px; }
 }
 
-/* 画面が縦に低い端末（横向きスマホ・小型端末）ではタイトル画面を詰める */
 @media (max-height:700px){
-  #titleScreen{ gap:8px; padding:16px; }
-  #titleCanvasWrap canvas{ width:110px; height:126px; }
-  .game-logo{ font-size:clamp(18px,5.4vw,26px); }
-  .press-start{ padding:11px 26px; font-size:14.5px; }
-  .small-note{ font-size:11.5px; line-height:1.6; padding:6px 12px; }
-  .tagline{ font-size:11px; padding:4px 12px; }
+  #titleScreen{ gap:9px; padding:16px; }
+  .game-logo{ font-size:clamp(21px,6.2vw,30px); }
+  .press-start{ padding:12px 28px; font-size:15px; }
+  .small-note{ font-size:11.5px; line-height:1.75; padding:10px 14px; }
+  .tagline{ font-size:11.5px; padding:5px 14px; }
 }
 @media (max-height:560px){
   #titleCanvasWrap{ display:none; }
   #topHud{ padding:6px; }
-  #bottomPanel{ margin:6px 8px 8px; padding:8px 10px; }
-  #diceFace{ width:44px; height:44px; font-size:19px; }
+  #bottomPanel{ margin:6px 8px 8px; padding:11px 10px 9px; }
+  #diceFace{ width:44px; height:44px; padding:5px; }
+  #diceFace .pip{ width:7px; height:7px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration:0.01ms !important; animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+  }
+  .firefly{ display:none; }
 }
 </style>
 </head>
 <body>
 <div id="app">
-  <div class="hill hill-back"></div>
-  <div class="hill hill-front"></div>
-  <div class="blob" style="width:200px;height:200px;background:var(--sky);top:-50px;left:-30px;"></div>
-  <div class="blob" style="width:240px;height:240px;background:var(--sun);top:16%;right:-80px;animation-delay:2s;"></div>
-  <div class="blob" style="width:190px;height:190px;background:var(--leaf);bottom:-40px;left:32%;animation-delay:4s;"></div>
+
+  <!-- 背景：夕暮れの空・耶馬渓の岩峰・堀の水面 -->
+  <svg id="sceneSky" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <!-- 空気遠近：遠い稜線ほど霧に溶けて淡くなる -->
+      <linearGradient id="ridge1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#B7C9D6"/><stop offset="100%" stop-color="#D3DFE4"/>
+      </linearGradient>
+      <linearGradient id="ridge2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#8EA7B6"/><stop offset="100%" stop-color="#B4C6CB"/>
+      </linearGradient>
+      <linearGradient id="ridge3" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#5E8087"/><stop offset="100%" stop-color="#89A49F"/>
+      </linearGradient>
+      <linearGradient id="ridge4" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3E6B5C"/><stop offset="100%" stop-color="#5D8570"/>
+      </linearGradient>
+      <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#F0F2E6"/>
+        <stop offset="45%" stop-color="#D9E1DA"/>
+        <stop offset="100%" stop-color="#BCCBC2"/>
+      </linearGradient>
+      <radialGradient id="sunGlow">
+        <stop offset="0%" stop-color="#FFFEF6" stop-opacity="0.95"/>
+        <stop offset="50%" stop-color="#FFF6DC" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#FFF6DC" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="mistGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
+        <stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.9"/>
+        <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+
+    <!-- 朝日（低く、白く、拡散している） -->
+    <circle cx="70" cy="20" r="30" fill="url(#sunGlow)"/>
+    <circle cx="70" cy="20" r="7" fill="#FFFDF2" opacity="0.85"/>
+
+    <!-- 耶馬渓の岩峰：遠景から近景へ四層 -->
+    <path fill="url(#ridge1)" opacity="0.7"
+      d="M0,52 L6,44 L11,50 L17,38 L22,48 L29,41 L35,51 L43,36 L50,49 L57,40 L64,51 L72,39 L79,49 L86,42 L93,51 L100,45 L100,101 L0,101 Z"/>
+    <rect class="mist-a" x="-10" y="46" width="120" height="9" fill="url(#mistGrad)" opacity="0.85"/>
+
+    <path fill="url(#ridge2)" opacity="0.8"
+      d="M0,60 L7,54 L13,59 L20,49 L27,58 L34,52 L41,61 L49,48 L56,59 L63,53 L71,62 L78,52 L85,60 L92,55 L100,61 L100,101 L0,101 Z"/>
+    <rect class="mist-b" x="-10" y="56" width="120" height="10" fill="url(#mistGrad)" opacity="0.8"/>
+
+    <path fill="url(#ridge3)" opacity="0.9"
+      d="M0,68 L6,63 L12,68 L19,60 L26,67 L33,62 L40,69 L48,59 L55,68 L62,63 L70,70 L77,62 L84,68 L92,64 L100,69 L100,101 L0,101 Z"/>
+    <rect class="mist-a" x="-10" y="65" width="120" height="8" fill="url(#mistGrad)" opacity="0.7" style="animation-duration:31s"/>
+
+    <path fill="url(#ridge4)"
+      d="M0,75 L6,71 L12,75 L19,69 L26,74 L33,70 L40,76 L48,68 L55,75 L62,71 L70,77 L77,70 L84,75 L92,72 L100,76 L100,101 L0,101 Z"/>
+
+    <!-- 松の並び（切り絵風） -->
+    <g fill="#2E5648" opacity="0.9">
+      <path d="M8,81 L11,73 L14,81 Z"/><path d="M18,82 L20.5,75 L23,82 Z"/>
+      <path d="M31,81 L34,74 L37,81 Z"/><path d="M45,82 L47.5,76 L50,82 Z"/>
+      <path d="M60,81 L63,74 L66,81 Z"/><path d="M74,82 L76.5,76 L79,82 Z"/>
+      <path d="M88,81 L91,74 L94,81 Z"/>
+    </g>
+
+    <!-- 堀の水面（朝の白い光を返す） -->
+    <rect x="0" y="80" width="100" height="21" fill="url(#water)"/>
+    <g stroke="#FFFFFF" stroke-width="0.5" opacity="0.55" stroke-linecap="round">
+      <line x1="62" y1="84" x2="96" y2="84"/>
+      <line x1="70" y1="88" x2="92" y2="88"/>
+      <line x1="58" y1="92" x2="88" y2="92"/>
+      <line x1="12" y1="86" x2="34" y2="86"/>
+      <line x1="20" y1="91" x2="40" y2="91"/>
+    </g>
+    <!-- 水面をなでる川霧 -->
+    <rect class="mist-b" x="-10" y="79" width="120" height="7" fill="url(#mistGrad)" opacity="0.75" style="animation-duration:40s"/>
+
+    <!-- 朝の鳥 -->
+    <g class="birds" stroke="#5A6A76" stroke-width="0.45" fill="none" stroke-linecap="round" opacity="0.75">
+      <path d="M0,0 q1.6,-1.3 3.2,0 q1.6,-1.3 3.2,0"/>
+      <path d="M7,3.4 q1.2,-1 2.4,0 q1.2,-1 2.4,0"/>
+      <path d="M-4,5.2 q1.1,-0.9 2.2,0 q1.1,-0.9 2.2,0"/>
+    </g>
+  </svg>
+
+  <!-- 中津城（三大水城のひとつ） -->
+  <svg id="sceneCastle" viewBox="0 0 200 160" aria-hidden="true">
+    <defs>
+      <linearGradient id="roof" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#4C5A6B"/><stop offset="100%" stop-color="#232E3C"/>
+      </linearGradient>
+      <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FBF4E4"/><stop offset="100%" stop-color="#DCCFB4"/>
+      </linearGradient>
+      <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#8B8574"/><stop offset="100%" stop-color="#4E4C44"/>
+      </linearGradient>
+    </defs>
+
+    <!-- 石垣 -->
+    <path fill="url(#stone)" d="M22,158 L44,112 L156,112 L178,158 Z"/>
+    <g stroke="rgba(255,246,224,0.18)" stroke-width="1">
+      <line x1="34" y1="136" x2="166" y2="136"/>
+      <line x1="40" y1="124" x2="160" y2="124"/>
+      <line x1="70" y1="112" x2="62" y2="158"/>
+      <line x1="100" y1="112" x2="100" y2="158"/>
+      <line x1="130" y1="112" x2="138" y2="158"/>
+    </g>
+
+    <!-- 一層 -->
+    <rect x="58" y="90" width="84" height="24" fill="url(#wall)" stroke="rgba(35,31,39,0.35)" stroke-width="1"/>
+    <g fill="#2B3542">
+      <rect x="66" y="96" width="9" height="11" rx="1"/><rect x="82" y="96" width="9" height="11" rx="1"/>
+      <rect x="109" y="96" width="9" height="11" rx="1"/><rect x="125" y="96" width="9" height="11" rx="1"/>
+    </g>
+    <path fill="url(#roof)" d="M46,92 Q100,84 154,92 L138,74 L62,74 Z"/>
+
+    <!-- 二層 -->
+    <rect x="70" y="56" width="60" height="19" fill="url(#wall)" stroke="rgba(35,31,39,0.35)" stroke-width="1"/>
+    <g fill="#2B3542">
+      <rect x="78" y="61" width="8" height="9" rx="1"/><rect x="96" y="61" width="8" height="9" rx="1"/>
+      <rect x="114" y="61" width="8" height="9" rx="1"/>
+    </g>
+    <path fill="url(#roof)" d="M60,58 Q100,51 140,58 L127,42 L73,42 Z"/>
+
+    <!-- 三層 -->
+    <rect x="82" y="27" width="36" height="16" fill="url(#wall)" stroke="rgba(35,31,39,0.35)" stroke-width="1"/>
+    <rect x="88" y="31" width="7" height="8" rx="1" fill="#2B3542"/>
+    <rect x="105" y="31" width="7" height="8" rx="1" fill="#2B3542"/>
+    <path fill="url(#roof)" d="M72,29 Q100,21 128,29 L116,13 L84,13 Z"/>
+
+    <!-- 鯱と棟 -->
+    <path fill="#C89430" d="M96,13 L100,4 L104,13 Z"/>
+    <circle cx="100" cy="4" r="2.2" fill="#E9BB55"/>
+  </svg>
 
   <!-- TITLE -->
   <div id="titleScreen">
-    <div class="game-logo display-font">中津どんぐりすごろく<small>どんぐりちゃんと、なかつ暮らし発見の旅</small></div>
+    <div class="game-logo">中津どんぐりすごろく<small>どんぐりちゃんと、なかつ暮らし発見の旅</small></div>
     <div class="tagline">田舎 + まち、ちょうどいい、なかつ。</div>
-    <div id="titleCanvasWrap"><canvas id="titleCanvas" width="150" height="172"></canvas></div>
+    <div id="titleCanvasWrap"><canvas id="titleCanvas"></canvas></div>
     <button class="press-start" id="startBtn">▶ タップしてスタート</button>
     <div class="small-note">中津駅からぐるっと1周、名所や暮らしのヒミツをめぐって「なかつスタンプ📮」を集めよう。中津駅に戻ってこれたらゴールだよ！ぜんぶ集めたら、あなたも今日から中津市民!?</div>
   </div>
@@ -280,6 +823,7 @@ a.btn{ display:inline-block; text-decoration:none; text-align:center; }
       <div class="hud-chip glass stamp">📮<b id="stampVal">0</b>/<span id="stampTotal">15</span></div>
       <div class="hud-chip glass" id="staminaBarWrap">⚡<div id="staminaBar"><div id="staminaFill" style="width:100%"></div></div></div>
       <div class="hud-chip glass" id="itemStrip"></div>
+      <button class="hud-chip glass" id="bgmBtn" aria-label="サウンド">🔊</button>
     </div>
 
     <div id="boardWrap">
@@ -287,12 +831,21 @@ a.btn{ display:inline-block; text-decoration:none; text-align:center; }
         <svg id="pathSvg" viewBox="0 0 100 100" preserveAspectRatio="none">
           <defs>
             <linearGradient id="pathGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#8FC996"/>
-              <stop offset="50%" stop-color="#FFC15E"/>
-              <stop offset="100%" stop-color="#C9A6E8"/>
+              <stop offset="0%" stop-color="#E9BB55"/>
+              <stop offset="50%" stop-color="#FFF3D2"/>
+              <stop offset="100%" stop-color="#E9BB55"/>
             </linearGradient>
           </defs>
-          <polyline id="pathLine" points="" fill="none" stroke="url(#pathGrad)" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"/>
+          <!-- 街道：墨の下刷り → 和紙の道 → 金の点線 → 歩いた分だけ灯る -->
+          <polyline id="pathInk" points="" fill="none" stroke="rgba(40,52,62,0.8)" stroke-width="9"
+                    stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+          <polyline id="pathLine" points="" fill="none" stroke="#F2E4C4" stroke-width="6"
+                    stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" opacity="0.9"/>
+          <polyline id="pathTrail" points="" fill="none" stroke="url(#pathGrad)" stroke-width="6"
+                    stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"
+                    style="filter:drop-shadow(0 0 6px rgba(233,187,85,0.9))"/>
+          <polyline id="pathDash" points="" fill="none" stroke="rgba(70,80,70,0.55)" stroke-width="1.4"
+                    stroke-dasharray="3 5" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
         </svg>
       </div>
       <div id="playerToken"></div>
@@ -302,7 +855,7 @@ a.btn{ display:inline-block; text-decoration:none; text-align:center; }
     <div id="bottomPanel" class="glass">
       <div id="msgLog">中津駅に到着した。さあ、暮らし発見の旅の始まりだ！</div>
       <div id="diceZone">
-        <div id="diceFace">?</div>
+        <div id="diceFace"></div>
         <button class="btn" id="rollBtn">サイコロを振る</button>
       </div>
     </div>
@@ -321,19 +874,19 @@ a.btn{ display:inline-block; text-decoration:none; text-align:center; }
   <!-- RESULT -->
   <div id="resultScreen">
     <div id="resultBox" class="glass">
-      <div style="font-size:13.5px;font-weight:700;color:var(--sun-deep)">中津一周 コンプリート！</div>
+      <div class="result-eyebrow">中津一周 コンプリート！</div>
       <div id="resultRank" class="display-font">S</div>
       <span id="resultRankLabel">なかつ通</span>
       <div id="completeBanner">📮 スタンプ全部集めた！ あなたはもう"なかつマスター"だよ✨</div>
-      <div id="stampGrid"></div>
+      <div class="stamp-book"><div id="stampGrid"></div></div>
       <div class="result-row"><span>獲得コイン</span><span id="rCoin">0</span></div>
       <div class="result-row"><span>お土産ボーナス</span><span id="rItem">0</span></div>
       <div class="result-row"><span>残りスタミナ</span><span id="rStamina">0</span></div>
       <div class="result-row"><span>クイズ正解</span><span id="rQuiz">0</span></div>
       <div class="result-row"><span>スタンプボーナス</span><span id="rStamp">0</span></div>
-      <div class="result-row" style="font-weight:900;color:var(--sun-deep)"><span>スコア</span><span id="rTotal">0</span></div>
+      <div class="result-row total"><span>スコア</span><span id="rTotal">0</span></div>
       <div class="result-row"><span>自己ベスト</span><span id="rBest">0</span></div>
-      <div style="margin-top:16px; display:flex; gap:8px; justify-content:center;">
+      <div style="margin-top:18px; display:flex; gap:9px; justify-content:center;">
         <button class="btn" id="againBtn">もう一周する</button>
         <button class="btn secondary" id="titleBackBtn">タイトルへ</button>
       </div>
@@ -360,91 +913,193 @@ window.addEventListener('orientationchange', setRealViewportHeight);
 if(window.visualViewport){
   window.visualViewport.addEventListener('resize', setRealViewportHeight);
 }
+const REDUCE_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* =========================================================
-   どんぐりちゃん スムーズ・グラデーション スプライト描画
+   どんぐりちゃん 高精細スプライト描画
+   基準サイズ 60 x 69 の座標系で描き、実表示は
+   devicePixelRatio を掛けて描画するのでどの端末でも輪郭が締まる
 ========================================================= */
-function drawAcorn(ctx){
-  const W=60, H=69;
+function drawAcorn(ctx, mood){
+  mood = mood || 'idle';
   ctx.imageSmoothingEnabled = true;
-  ctx.clearRect(0,0,W,H);
+  ctx.clearRect(-6,-6,76,84);
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
 
-  // ground shadow
-  ctx.fillStyle = 'rgba(107,75,51,0.20)';
-  ctx.beginPath(); ctx.ellipse(30,66,15,4,0,0,Math.PI*2); ctx.fill();
+  const INK = '#3A2B1C';
+  const up = (mood==='happy' || mood==='wow');   // ばんざい
+  const droop = (mood==='sad');                   // しょんぼり
 
-  // legs
-  const legGrad = ctx.createLinearGradient(0,58,0,66);
-  legGrad.addColorStop(0,'#CE8A54'); legGrad.addColorStop(1,'#9C5E30');
-  ctx.fillStyle = legGrad;
-  roundRect(ctx,19,58,8,8,3); ctx.fill();
-  roundRect(ctx,33,58,8,8,3); ctx.fill();
+  /* --- 脚 --- */
+  const legGrad = ctx.createLinearGradient(0,57,0,67);
+  legGrad.addColorStop(0,'#D08F58'); legGrad.addColorStop(1,'#95562B');
+  ctx.fillStyle = legGrad; ctx.strokeStyle = INK; ctx.lineWidth = 1.3;
+  roundRect(ctx,18.5,57,9,9,3.5); ctx.fill(); ctx.stroke();
+  roundRect(ctx,32.5,57,9,9,3.5); ctx.fill(); ctx.stroke();
 
-  // arms
-  const armGrad = ctx.createRadialGradient(9,44,1,9,44,9);
-  armGrad.addColorStop(0,'#F3C596'); armGrad.addColorStop(1,'#CE8A54');
+  /* --- 腕 --- */
+  const armGrad = ctx.createRadialGradient(9,44,1,9,44,10);
+  armGrad.addColorStop(0,'#F6CDA0'); armGrad.addColorStop(1,'#C9854F');
   ctx.fillStyle = armGrad;
-  ctx.beginPath(); ctx.ellipse(9,44,6,9,0.35,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.ellipse(51,44,6,9,-0.35,0,Math.PI*2); ctx.fill();
+  const armY = up ? 31 : (droop ? 49 : 44.5);
+  const armT = up ? -0.85 : (droop ? 0.1 : 0.34);
+  ctx.beginPath(); ctx.ellipse(8.5,armY,6,9.2,armT,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(51.5,armY,6,9.2,-armT,0,Math.PI*2); ctx.fill(); ctx.stroke();
 
-  // body
-  const bodyGrad = ctx.createRadialGradient(24,36,4,30,42,26);
-  bodyGrad.addColorStop(0,'#FBDCB2');
-  bodyGrad.addColorStop(0.55,'#F0BE8A');
-  bodyGrad.addColorStop(1,'#C9854F');
+  /* --- 胴（どんぐりの実） --- */
+  const bodyGrad = ctx.createRadialGradient(23,34,3,30,43,27);
+  bodyGrad.addColorStop(0,'#FFEBCB');
+  bodyGrad.addColorStop(0.42,'#F5C994');
+  bodyGrad.addColorStop(0.8,'#DDA164');
+  bodyGrad.addColorStop(1,'#B87440');
   ctx.fillStyle = bodyGrad;
-  ctx.beginPath(); ctx.ellipse(30,42,22,22,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(30,42.5,22,22.5,0,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle = INK; ctx.lineWidth = 1.6; ctx.stroke();
 
-  // rim light
-  ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-  ctx.lineWidth = 1.4;
-  ctx.beginPath(); ctx.ellipse(30,42,21.3,21.3,0,Math.PI*1.15,Math.PI*1.75); ctx.stroke();
+  /* 実の縦筋（どんぐりらしい木目） */
+  ctx.strokeStyle = 'rgba(150,95,50,0.18)'; ctx.lineWidth = 1;
+  for(let i=-2;i<=2;i++){
+    ctx.beginPath();
+    ctx.moveTo(30+i*7, 26);
+    ctx.quadraticCurveTo(30+i*8.6, 46, 30+i*5.4, 62);
+    ctx.stroke();
+  }
 
-  // hat brim
-  const brimGrad = ctx.createLinearGradient(4,20,56,20);
-  brimGrad.addColorStop(0,'#5FA46A'); brimGrad.addColorStop(0.5,'#8FC996'); brimGrad.addColorStop(1,'#4E8858');
-  ctx.fillStyle = brimGrad;
-  ctx.beginPath(); ctx.ellipse(28,21,25,7,-0.04,0,Math.PI*2); ctx.fill();
+  /* リムライト（夕日を受ける右下） */
+  ctx.strokeStyle = 'rgba(255,232,180,0.85)'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.ellipse(30,42.5,20.6,21,0,Math.PI*0.05,Math.PI*0.62); ctx.stroke();
+  /* 反射光（左上） */
+  ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.ellipse(30,42.5,20.6,21,0,Math.PI*1.14,Math.PI*1.62); ctx.stroke();
 
-  // hat dome
-  const domeGrad = ctx.createRadialGradient(22,10,2,28,13,18);
-  domeGrad.addColorStop(0,'#A8DBA8'); domeGrad.addColorStop(1,'#5FA46A');
+  /* --- 朱の襟巻き（差し色） --- */
+  const scarf = ctx.createLinearGradient(14,56,46,62);
+  scarf.addColorStop(0,'#D9584A'); scarf.addColorStop(1,'#96271C');
+  ctx.fillStyle = scarf; ctx.strokeStyle = INK; ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(15,55.5);
+  ctx.quadraticCurveTo(30,63.5,45,55.5);
+  ctx.quadraticCurveTo(30,60.5,15,55.5);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(43.5,56.5); ctx.lineTo(50,61.5); ctx.lineTo(45,62.5);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+
+  /* --- 帽子（殻斗）--- */
+  const brimGrad = ctx.createLinearGradient(4,21,54,23);
+  brimGrad.addColorStop(0,'#3E7B54'); brimGrad.addColorStop(0.45,'#7FC28C'); brimGrad.addColorStop(1,'#2F6244');
+  ctx.fillStyle = brimGrad; ctx.strokeStyle = INK; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.ellipse(28.5,21,25,7.4,-0.04,0,Math.PI*2); ctx.fill(); ctx.stroke();
+
+  const domeGrad = ctx.createRadialGradient(21,8,2,28,14,20);
+  domeGrad.addColorStop(0,'#B6E4B4'); domeGrad.addColorStop(0.6,'#6FB07E'); domeGrad.addColorStop(1,'#3B7A53');
   ctx.fillStyle = domeGrad;
-  ctx.beginPath(); ctx.ellipse(28,12,16,11,0,Math.PI,0,true); ctx.fill();
-  ctx.fillStyle = 'rgba(255,255,255,0.3)';
-  ctx.beginPath(); ctx.ellipse(21,8,6,3.4,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(28.5,12.5,16.5,11.5,0,Math.PI,0,true); ctx.fill();
+  ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.stroke();
 
-  // stem
-  ctx.fillStyle = '#5C3A1E';
-  roundRect(ctx,26,-1,5,7,2); ctx.fill();
-  // sparkle
-  drawSparkle(ctx,44,4,3.5,'#FFE9B0');
+  /* 殻斗の網目模様 */
+  ctx.save();
+  ctx.beginPath(); ctx.ellipse(28.5,12.5,15.4,10.6,0,Math.PI,0,true); ctx.clip();
+  ctx.strokeStyle = 'rgba(30,70,45,0.32)'; ctx.lineWidth = 0.9;
+  for(let y=1;y<=10;y+=3){
+    ctx.beginPath(); ctx.moveTo(12,12.5-y); ctx.lineTo(45,12.5-y); ctx.stroke();
+  }
+  for(let x=15;x<=44;x+=5){
+    ctx.beginPath(); ctx.moveTo(x,12.5); ctx.lineTo(x-2,1); ctx.stroke();
+  }
+  ctx.restore();
 
-  // eyes
-  ctx.fillStyle = '#4A3016';
-  ctx.beginPath(); ctx.ellipse(21,39,5,6.2,0,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.ellipse(38,39,5,6.2,0,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle = '#fff';
-  ctx.beginPath(); ctx.arc(19.4,37,1.6,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(36.4,37,1.6,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle = 'rgba(255,255,255,0.6)';
-  ctx.beginPath(); ctx.arc(22,41,0.9,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(39,41,0.9,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.42)';
+  ctx.beginPath(); ctx.ellipse(20.5,7.5,6.2,3.2,-0.15,0,Math.PI*2); ctx.fill();
 
-  // blush
-  ctx.fillStyle = 'rgba(255,155,122,0.55)';
-  ctx.beginPath(); ctx.ellipse(13,46,4,2.6,0,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.ellipse(46,46,4,2.6,0,0,Math.PI*2); ctx.fill();
+  /* 軸 */
+  ctx.fillStyle = '#5C3A1E'; ctx.strokeStyle = INK; ctx.lineWidth = 1.1;
+  roundRect(ctx,26.5,-1,5.5,7.5,2.2); ctx.fill(); ctx.stroke();
 
-  // nose
-  ctx.fillStyle = '#E8935A';
-  ctx.beginPath(); ctx.moveTo(28,43.5); ctx.lineTo(32,43.5); ctx.lineTo(30,47); ctx.closePath(); ctx.fill();
+  /* 若葉（帽子の飾り） */
+  ctx.fillStyle = '#6FB07E'; ctx.strokeStyle = '#2F6244'; ctx.lineWidth = 0.9;
+  ctx.beginPath();
+  ctx.moveTo(33,2.5); ctx.quadraticCurveTo(43,0.5,44.5,6.5); ctx.quadraticCurveTo(37,8,33,2.5);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
 
-  // mouth
-  ctx.fillStyle = '#3A2410';
-  ctx.beginPath(); ctx.ellipse(30,51,4.4,2.6,0,0,Math.PI); ctx.fill();
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(27.6,49.4,2,2); ctx.fillRect(30.4,49.4,2,2);
+  drawSparkle(ctx,47.5,3.5,3.2,'#FFF0BE');
+
+  /* --- 顔（表情ごとに描き分ける） --- */
+  const EYE = '#2E2118';
+  function openEye(cx, rx, ry, hx){
+    ctx.fillStyle = EYE;
+    ctx.beginPath(); ctx.ellipse(cx,39,rx,ry,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(cx+hx,36.6,rx*0.36,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = 'rgba(255,240,200,0.7)';
+    ctx.beginPath(); ctx.arc(cx+1.4,41.4,1.1,0,Math.PI*2); ctx.fill();
+  }
+  function archEye(cx, dir){ /* dir:-1 = ∧（笑い） / 1 = ∨（閉じ目） */
+    ctx.strokeStyle = EYE; ctx.lineWidth = 2.3; ctx.lineCap='round';
+    ctx.beginPath();
+    ctx.moveTo(cx-4.6,39 + dir*1.6);
+    ctx.quadraticCurveTo(cx,39 - dir*3.4, cx+4.6,39 + dir*1.6);
+    ctx.stroke();
+  }
+
+  if(mood==='happy'){ archEye(21,-1); archEye(38,-1); }
+  else if(mood==='blink' || mood==='sleepy'){ archEye(21,1); archEye(38,1); }
+  else if(mood==='wow'){ openEye(21,6.2,7.7,-2.1); openEye(38,6.2,7.7,-2.1); }
+  else if(mood==='sad'){
+    openEye(21,4.6,5.2,-1.6); openEye(38,4.6,5.2,-1.6);
+    ctx.strokeStyle = 'rgba(46,33,24,0.85)'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(16.4,31.6); ctx.lineTo(24.6,34.2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(42.6,31.6); ctx.lineTo(34.4,34.2); ctx.stroke();
+  }
+  else { openEye(21,5.3,6.6,-1.8); openEye(38,5.3,6.6,-1.8); }
+
+  /* ほお */
+  ctx.fillStyle = (mood==='happy') ? 'rgba(228,110,86,0.68)' : 'rgba(228,110,86,0.5)';
+  ctx.beginPath(); ctx.ellipse(13,46.5,4.4,2.8,-0.1,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(46,46.5,4.4,2.8,0.1,0,Math.PI*2); ctx.fill();
+
+  /* 鼻 */
+  ctx.fillStyle = '#E08A52'; ctx.strokeStyle = 'rgba(58,43,28,0.55)'; ctx.lineWidth = 0.8;
+  ctx.beginPath(); ctx.moveTo(27.6,43.4); ctx.lineTo(32.4,43.4); ctx.lineTo(30,47.2);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+
+  /* 口 */
+  if(mood==='happy'){
+    ctx.fillStyle = '#37281B';
+    ctx.beginPath(); ctx.ellipse(30,50.4,6.2,4.6,0,0,Math.PI); ctx.fill();
+    ctx.fillStyle = '#E6787A';
+    ctx.beginPath(); ctx.ellipse(30,53.6,3.4,1.9,0,0,Math.PI); ctx.fill();
+    ctx.fillStyle = '#fff';
+    roundRect(ctx,26.6,49.0,2.4,2.2,0.6); ctx.fill();
+    roundRect(ctx,31.0,49.0,2.4,2.2,0.6); ctx.fill();
+  } else if(mood==='wow'){
+    ctx.fillStyle = '#37281B';
+    ctx.beginPath(); ctx.ellipse(30,51.6,3.2,4.0,0,0,Math.PI*2); ctx.fill();
+  } else if(mood==='sad'){
+    ctx.strokeStyle = '#37281B'; ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(25.6,52.4); ctx.quadraticCurveTo(30,48.6,34.4,52.4); ctx.stroke();
+    /* 汗 */
+    ctx.fillStyle = 'rgba(140,200,225,0.9)'; ctx.strokeStyle='rgba(60,110,140,0.6)'; ctx.lineWidth=0.7;
+    ctx.beginPath();
+    ctx.moveTo(48,33); ctx.quadraticCurveTo(51.6,37.6,48,39.6); ctx.quadraticCurveTo(44.4,37.6,48,33);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+  } else if(mood==='sleepy'){
+    ctx.fillStyle = '#37281B';
+    ctx.beginPath(); ctx.ellipse(30,51.4,2.2,2.0,0,0,Math.PI*2); ctx.fill();
+  } else {
+    ctx.fillStyle = '#37281B';
+    ctx.beginPath(); ctx.ellipse(30,50.8,4.6,2.8,0,0,Math.PI); ctx.fill();
+    ctx.fillStyle = '#fff';
+    roundRect(ctx,27.5,49.2,2.1,2.1,0.5); ctx.fill();
+    roundRect(ctx,30.4,49.2,2.1,2.1,0.5); ctx.fill();
+  }
+
+  if(mood==='happy'){
+    drawSparkle(ctx,6,26,3.0,'#FFE9A8');
+    drawSparkle(ctx,54,28,2.6,'#FFE9A8');
+  }
 }
 function roundRect(ctx,x,y,w,h,r){
   ctx.beginPath();
@@ -458,39 +1113,218 @@ function drawSparkle(ctx,x,y,s,color){
   ctx.lineTo(x,y+s); ctx.lineTo(x-s*0.28,y+s*0.28); ctx.lineTo(x-s,y); ctx.lineTo(x-s*0.28,y-s*0.28);
   ctx.closePath(); ctx.fill();
 }
+/* 論理サイズ 60x69 の絵を、任意のCSSサイズ×dpr で鮮明に描く */
+function paintAcorn(canvas, cssW, cssH, mood){
+  const dpr = Math.min(3, window.devicePixelRatio || 1);
+  canvas.width  = Math.round(cssW * dpr);
+  canvas.height = Math.round(cssH * dpr);
+  canvas.style.width  = cssW + 'px';
+  canvas.style.height = cssH + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr*cssW/60, 0, 0, dpr*cssH/69, 0, 0);
+  drawAcorn(ctx, mood);
+}
 const titleCv = document.getElementById('titleCanvas');
-(function(){
-  const off = document.createElement('canvas'); off.width=60; off.height=69;
-  drawAcorn(off.getContext('2d'));
-  const tctx = titleCv.getContext('2d');
-  tctx.imageSmoothingEnabled = true;
-  tctx.drawImage(off,0,0,60,69,0,0,150,172);
-})();
+function titleAcornSize(){ return window.innerHeight <= 700 ? 116 : 156; }
+function paintTitleAcorn(mood){
+  const w = titleAcornSize();
+  paintAcorn(titleCv, w, Math.round(w*69/60), mood || acornMood);
+}
+
+/* --- 表情の管理 --- */
+let acornMood = 'idle';
+let moodResetTimer = null;
+function repaintAcorns(m){
+  paintTitleAcorn(m);
+  const pc = document.querySelector('#playerToken canvas');
+  if(pc) paintAcorn(pc, 40, 46, m);
+}
+/* mood を hold ミリ秒だけ見せて、ふつうの顔に戻す */
+function setMood(m, hold){
+  acornMood = m;
+  repaintAcorns(m);
+  clearTimeout(moodResetTimer);
+  if(hold){
+    moodResetTimer = setTimeout(()=>{ acornMood = 'idle'; repaintAcorns('idle'); }, hold);
+  }
+}
+paintTitleAcorn();
+
+/* まばたき（生きている感じを出す） */
+if(!REDUCE_MOTION){
+  setInterval(()=>{
+    if(acornMood !== 'idle') return;
+    if(Math.random() < 0.6){
+      repaintAcorns('blink');
+      setTimeout(()=>{ if(acornMood==='idle') repaintAcorns('idle'); }, 130);
+    }
+  }, 2600);
+}
 
 /* =========================================================
-   サウンド（WebAudio 簡易ビープ）
+   朝の光の粒（アンビエント）
 ========================================================= */
-let actx;
-function beep(freq=440, dur=0.09, type='sine', vol=0.06, delay=0){
+function spawnMotes(){
+  if(REDUCE_MOTION) return;
+  const app = document.getElementById('app');
+  for(let i=0;i<11;i++){
+    const f = document.createElement('div');
+    f.className = 'mote';
+    f.style.left = (6 + Math.random()*88) + '%';
+    f.style.top  = (42 + Math.random()*48) + '%';
+    f.style.animationDelay = (Math.random()*13) + 's';
+    f.style.animationDuration = (10 + Math.random()*8) + 's';
+    app.appendChild(f);
+  }
+}
+spawnMotes();
+
+/* =========================================================
+   サウンド
+   ・効果音：拍子木・琴の爪弾き・鈴など和楽器を模した合成音
+   ・BGM：ヨナ抜き音階（D E F# A B）による自動生成のループ
+========================================================= */
+let actx, masterGain, musicGain, sfxGain, noiseBuf;
+function audioInit(){
+  if(actx) return actx;
+  actx = new (window.AudioContext||window.webkitAudioContext)();
+  masterGain = actx.createGain(); masterGain.gain.value = 0.9; masterGain.connect(actx.destination);
+  musicGain  = actx.createGain(); musicGain.gain.value = 0.0001; musicGain.connect(masterGain);
+  sfxGain    = actx.createGain(); sfxGain.gain.value = 1.0;      sfxGain.connect(masterGain);
+  const len = Math.floor(actx.sampleRate * 0.6);
+  noiseBuf = actx.createBuffer(1, len, actx.sampleRate);
+  const d = noiseBuf.getChannelData(0);
+  for(let i=0;i<len;i++) d[i] = Math.random()*2-1;
+  return actx;
+}
+function resumeAudio(){
+  try{ audioInit(); if(actx.state==='suspended') actx.resume(); }catch(e){}
+}
+
+function tone(o){
   try{
-    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
-    const t0 = actx.currentTime + delay;
-    const osc = actx.createOscillator();
-    const gain = actx.createGain();
-    osc.type = type; osc.frequency.value = freq;
-    gain.gain.setValueAtTime(vol, t0);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
-    osc.connect(gain); gain.connect(actx.destination);
-    osc.start(t0); osc.stop(t0+dur);
+    audioInit();
+    const t0 = actx.currentTime + (o.delay||0);
+    const dur = o.dur||0.2, vol = o.vol||0.06, atk = o.attack||0.006;
+    const osc = actx.createOscillator(), g = actx.createGain();
+    osc.type = o.type||'sine';
+    osc.frequency.setValueAtTime(o.freq, t0);
+    if(o.glide) osc.frequency.exponentialRampToValueAtTime(o.glide, t0+dur);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(vol, t0+atk);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+    osc.connect(g); g.connect(o.dest || sfxGain);
+    osc.start(t0); osc.stop(t0+dur+0.03);
   }catch(e){}
 }
-function sfxRoll(){ for(let i=0;i<4;i++) beep(300+Math.random()*300,0.04,'triangle',0.04,i*0.05); }
-function sfxStep(){ beep(560,0.05,'triangle',0.05); }
-function sfxCoin(){ beep(880,0.06,'sine',0.06); beep(1320,0.08,'sine',0.05,0.06); }
-function sfxCorrect(){ beep(660,0.09,'sine',0.06); beep(990,0.12,'sine',0.06,0.09); }
-function sfxWrong(){ beep(160,0.18,'sawtooth',0.05); }
-function sfxFanfare(){ [523,659,784,1047].forEach((f,i)=>beep(f,0.16,'sine',0.06,i*0.14)); }
-function sfxStamp(){ beep(740,0.07,'sine',0.06); beep(1100,0.09,'sine',0.05,0.07); }
+/* 既存コードとの互換 */
+function beep(freq=440, dur=0.09, type='sine', vol=0.06, delay=0){
+  tone({freq:freq, dur:dur, type:type, vol:vol, delay:delay});
+}
+function noiseHit(o){
+  try{
+    audioInit();
+    const t0 = actx.currentTime + (o.delay||0);
+    const dur = o.dur||0.08;
+    const src = actx.createBufferSource(); src.buffer = noiseBuf;
+    const f = actx.createBiquadFilter();
+    f.type = o.type||'bandpass'; f.frequency.value = o.freq||1200; f.Q.value = o.q||1;
+    const g = actx.createGain();
+    g.gain.setValueAtTime(o.vol||0.12, t0);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+    src.connect(f); f.connect(g); g.connect(o.dest || sfxGain);
+    src.start(t0); src.stop(t0+dur+0.03);
+  }catch(e){}
+}
+/* 琴のひと爪 */
+function pluck(freq, dur, vol, delay, dest){
+  dur = dur||0.6; vol = vol||0.07; delay = delay||0;
+  tone({freq:freq, dur:dur, type:'triangle', vol:vol, delay:delay, attack:0.004, dest:dest});
+  tone({freq:freq*2.005, dur:dur*0.45, type:'sine', vol:vol*0.32, delay:delay, attack:0.003, dest:dest});
+  if(!dest) noiseHit({dur:0.028, vol:vol*0.55, delay:delay, freq:freq*3.2, q:2.4});
+}
+
+function sfxRoll(){
+  for(let i=0;i<5;i++){
+    noiseHit({dur:0.045, vol:0.14, delay:i*0.055, freq:900+Math.random()*900, q:1.6});
+    tone({freq:180+Math.random()*90, dur:0.05, type:'square', vol:0.03, delay:i*0.055});
+  }
+}
+/* 拍子木 */
+function sfxStep(){
+  noiseHit({dur:0.035, vol:0.13, delay:0, freq:2100, q:3.2});
+  tone({freq:430, dur:0.07, type:'triangle', vol:0.05, glide:300});
+}
+function sfxCoin(){ pluck(880,0.5,0.07); pluck(1174.66,0.55,0.055,0.075); }
+function sfxCorrect(){ pluck(587.33,0.5,0.07); pluck(739.99,0.5,0.07,0.09); pluck(880,0.75,0.075,0.18); }
+function sfxWrong(){
+  noiseHit({dur:0.09, vol:0.13, freq:320, q:1.1, type:'lowpass'});
+  tone({freq:196, dur:0.26, type:'triangle', vol:0.06, glide:146.83});
+}
+/* 判を捺す音＋鈴 */
+function sfxStamp(){
+  noiseHit({dur:0.07, vol:0.2, freq:260, q:0.8, type:'lowpass'});
+  tone({freq:1396.9, dur:0.5, type:'sine', vol:0.05, delay:0.03});
+  tone({freq:2093, dur:0.38, type:'sine', vol:0.028, delay:0.03});
+}
+function sfxFanfare(){
+  [587.33,659.25,739.99,880,987.77,1174.66].forEach((f,i)=>pluck(f,0.85,0.075,i*0.11));
+  tone({freq:293.66, dur:1.6, type:'sine', vol:0.05, delay:0.05, attack:0.05});
+  tone({freq:440, dur:1.6, type:'sine', vol:0.04, delay:0.05, attack:0.06});
+}
+function sfxWarp(){
+  tone({freq:440, dur:0.42, type:'sine', vol:0.06, glide:1760, attack:0.01});
+  noiseHit({dur:0.35, vol:0.07, freq:2600, q:0.7});
+}
+
+/* ---------- BGM（自動生成のループ） ---------- */
+const SCALE = [293.66,329.63,369.99,440,493.88,587.33,659.25,739.99,880,987.77];
+const ROOTS = [146.83,164.81,110.00,123.47]; /* D3 E3 A2 B2 */
+const BEAT = 0.6;
+let bgmOn = true, bgmTimer = null, bgmBar = 0, melIdx = 4;
+
+function scheduleBar(){
+  if(!actx || !bgmOn) return;
+  const root = ROOTS[bgmBar % ROOTS.length];
+  /* 通奏の和音 */
+  tone({freq:root,     dur:BEAT*8, type:'sine',     vol:0.05, attack:0.5, dest:musicGain});
+  tone({freq:root*1.5, dur:BEAT*8, type:'triangle', vol:0.028,attack:0.7, dest:musicGain});
+  /* 旋律（音階上をゆっくり歩く） */
+  for(let b=0;b<8;b++){
+    if(b===0 || Math.random() < 0.42){
+      melIdx = Math.max(0, Math.min(SCALE.length-1, melIdx + Math.floor(Math.random()*5) - 2));
+      pluck(SCALE[melIdx], 1.1, 0.045, b*BEAT, musicGain);
+      if(Math.random()<0.2) pluck(SCALE[Math.max(0,melIdx-2)], 0.8, 0.022, b*BEAT+0.28, musicGain);
+    }
+  }
+  bgmBar++;
+}
+function startBgm(){
+  if(!bgmOn) return;
+  resumeAudio();
+  if(!actx) return;
+  musicGain.gain.cancelScheduledValues(actx.currentTime);
+  musicGain.gain.setValueAtTime(Math.max(0.0001, musicGain.gain.value), actx.currentTime);
+  musicGain.gain.exponentialRampToValueAtTime(0.5, actx.currentTime + 2.4);
+  if(bgmTimer) return;
+  scheduleBar();
+  bgmTimer = setInterval(scheduleBar, BEAT*8*1000);
+}
+function stopBgm(){
+  if(actx && musicGain){
+    musicGain.gain.cancelScheduledValues(actx.currentTime);
+    musicGain.gain.setValueAtTime(Math.max(0.0001, musicGain.gain.value), actx.currentTime);
+    musicGain.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + 0.6);
+  }
+  if(bgmTimer){ clearInterval(bgmTimer); bgmTimer = null; }
+}
+const bgmBtn = document.getElementById('bgmBtn');
+bgmBtn.addEventListener('click', ()=>{
+  bgmOn = !bgmOn;
+  bgmBtn.textContent = bgmOn ? '🔊' : '🔇';
+  bgmBtn.classList.toggle('muted', !bgmOn);
+  if(bgmOn){ startBgm(); } else { stopBgm(); }
+});
 
 /* =========================================================
    ボードデータ
@@ -622,11 +1456,21 @@ const state = { pos:0, coins:0, stamina:20, maxStamina:20, items:[], quizCorrect
 
 const boardArea = document.getElementById('boardArea');
 const playerToken = document.getElementById('playerToken');
+const pathTrail = document.getElementById('pathTrail');
+
+function stampKeyOf(tile){
+  if(tile.type===TILE_TYPES.LANDMARK) return 'q'+tile.quiz;
+  if(tile.type===TILE_TYPES.MOVE) return 'm'+tile.move;
+  return null;
+}
 
 function renderBoard(){
   boardArea.querySelectorAll('.tile').forEach(e=>e.remove());
   const pts = PATH.map(p=>p.join(',')).join(' ') + ' ' + PATH[0].join(',');
-  document.getElementById('pathLine').setAttribute('points', pts);
+  ['pathInk','pathLine','pathTrail','pathDash'].forEach(id=>{
+    document.getElementById(id).setAttribute('points', pts);
+  });
+  updateTrail();
 
   let labelRow = 0;
   BOARD.forEach((tile, i)=>{
@@ -649,6 +1493,8 @@ function renderBoard(){
     div.className = cls;
     div.style.left = xp+'%'; div.style.top = yp+'%';
     div.dataset.idx = i;
+    const key = stampKeyOf(tile);
+    if(key) div.dataset.stampKey = key;
     let labelHtml = '';
     if(label){
       // 盤の左右端に近いタイルはラベルが画面外にはみ出さないよう、
@@ -661,25 +1507,70 @@ function renderBoard(){
       labelRow++;
       labelHtml = `<div class="tlabel${anchorCls}${rowCls}" title="${label}">${label}</div>`;
     }
-    div.innerHTML = labelHtml + `<span>${icon}</span>`;
+    const sealHtml = (key && state.stamps.has(key)) ? '<div class="seal"></div>' : '';
+    div.innerHTML = labelHtml + `<span>${icon}</span>` + sealHtml;
     boardArea.appendChild(div);
   });
   placeToken();
+}
+
+/* 集めた場所に朱印を捺す（盤面を作り直さず見た目だけ更新） */
+function refreshSeals(){
+  boardArea.querySelectorAll('.tile').forEach(el=>{
+    const key = el.dataset.stampKey;
+    if(!key) return;
+    const has = state.stamps.has(key);
+    const seal = el.querySelector('.seal');
+    if(has && !seal){
+      const s = document.createElement('div'); s.className='seal'; el.appendChild(s);
+    } else if(!has && seal){
+      seal.remove();
+    }
+  });
+}
+
+/* 歩いた街道を金色に灯す */
+function updateTrail(){
+  try{
+    const L = pathTrail.getTotalLength();
+    if(!L) return;
+    pathTrail.style.strokeDasharray = L;
+    pathTrail.style.strokeDashoffset = L * (1 - (state.pos / N));
+  }catch(e){}
 }
 
 function placeToken(){
   const [xp,yp] = PATH[state.pos];
   playerToken.style.left = xp+'%';
   playerToken.style.top = yp+'%';
+  updateTrail();
+  boardArea.querySelectorAll('.tile').forEach(el=>{
+    el.classList.toggle('active-glow', Number(el.dataset.idx) === state.pos);
+  });
+}
+
+let shownCoins = 0;
+function animateCount(el, from, to){
+  if(REDUCE_MOTION || from===to){ el.textContent = to; return; }
+  const t0 = performance.now(), dur = 420;
+  function frame(t){
+    const k = Math.min(1, (t-t0)/dur);
+    el.textContent = Math.round(from + (to-from)*(1-Math.pow(1-k,3)));
+    if(k<1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 }
 
 function updateHud(){
-  document.getElementById('coinVal').textContent = state.coins;
+  const coinEl = document.getElementById('coinVal');
+  animateCount(coinEl, shownCoins, state.coins);
+  shownCoins = state.coins;
   document.getElementById('loopVal').textContent = state.loop;
   document.getElementById('stampVal').textContent = state.stamps.size;
   document.getElementById('staminaFill').style.width = Math.max(0,(state.stamina/state.maxStamina*100))+'%';
   const strip = document.getElementById('itemStrip');
   strip.innerHTML = state.items.length? state.items.map(it=>`<div class="item-icon" title="${it.name}">${it.icon}</div>`).join('') : '<span style="opacity:.5;font-size:12px;">アイテムなし</span>';
+  refreshSeals();
 }
 
 function log(msg){ document.getElementById('msgLog').textContent = msg; }
@@ -700,7 +1591,78 @@ function spawnParticle(text){
   p.style.left = (w*xp/100 - 8)+'px';
   p.style.top = (h*yp/100 - 30)+'px';
   layer.appendChild(p);
-  setTimeout(()=>p.remove(), 1000);
+  setTimeout(()=>p.remove(), 1100);
+}
+
+/* 盤面上の座標をピクセルに換算 */
+function tileXY(idx){
+  const layer = document.getElementById('particleLayer');
+  const [xp,yp] = PATH[idx];
+  return [ layer.clientWidth*xp/100, layer.clientHeight*yp/100 ];
+}
+
+/* 着地の砂ぼこり */
+function spawnDust(){
+  if(REDUCE_MOTION) return;
+  const layer = document.getElementById('particleLayer');
+  const [x,y] = tileXY(state.pos);
+  for(let i=0;i<3;i++){
+    const d = document.createElement('div');
+    d.className = 'dust';
+    d.style.left = (x - 3.5 + (i-1)*6) + 'px';
+    d.style.top  = (y - 3.5) + 'px';
+    d.style.animationDelay = (i*0.04) + 's';
+    layer.appendChild(d);
+    setTimeout(()=>d.remove(), 700);
+  }
+}
+
+/* マスに降り立ったときの波紋 */
+function spawnRipple(){
+  if(REDUCE_MOTION) return;
+  const layer = document.getElementById('particleLayer');
+  const [x,y] = tileXY(state.pos);
+  const r = document.createElement('div');
+  r.className = 'ripple';
+  r.style.left = x + 'px'; r.style.top = y + 'px';
+  layer.appendChild(r);
+  setTimeout(()=>r.remove(), 700);
+}
+
+/* ワープの光跡：出発点から到着点まで光の粒を並べる */
+function warpTrail(fromIdx, toIdx){
+  if(REDUCE_MOTION) return;
+  const layer = document.getElementById('particleLayer');
+  let span = (toIdx - fromIdx + N) % N;
+  if(span === 0) span = N;
+  const steps = Math.min(10, Math.max(3, span));
+  for(let i=0;i<=steps;i++){
+    const idx = (fromIdx + Math.round(span*i/steps)) % N;
+    const [x,y] = tileXY(idx);
+    const d = document.createElement('div');
+    d.className = 'warp-dot';
+    d.style.left = x + 'px'; d.style.top = y + 'px';
+    d.style.animationDelay = (i*0.035) + 's';
+    layer.appendChild(d);
+    setTimeout(()=>d.remove(), 1000);
+  }
+}
+
+/* 木の葉が舞う演出（ゴール時） */
+function spawnLeaves(host, count){
+  if(REDUCE_MOTION) return;
+  const colors = ['#C0392B','#E9BB55','#4C8467','#D9584A','#C89430'];
+  for(let i=0;i<count;i++){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + '%';
+    c.style.top = '-20px';
+    c.style.background = colors[i % colors.length];
+    c.style.animationDelay = (Math.random()*0.9) + 's';
+    c.style.animationDuration = (2.2 + Math.random()*1.4) + 's';
+    host.appendChild(c);
+    setTimeout(()=>c.remove(), 4200);
+  }
 }
 
 /* =========================================================
@@ -709,29 +1671,53 @@ function spawnParticle(text){
 const rollBtn = document.getElementById('rollBtn');
 const diceFace = document.getElementById('diceFace');
 
+/* 骰子の目の配置（3×3グリッド上の座標） */
+const PIP_MAP = {
+  1:[[2,2]],
+  2:[[1,1],[3,3]],
+  3:[[1,1],[2,2],[3,3]],
+  4:[[1,1],[3,1],[1,3],[3,3]],
+  5:[[1,1],[3,1],[2,2],[1,3],[3,3]],
+  6:[[1,1],[3,1],[1,2],[3,2],[1,3],[3,3]]
+};
+function setDice(v){
+  if(typeof v === 'number'){
+    diceFace.innerHTML = PIP_MAP[v].map(([c,r])=>
+      `<div class="pip${v===1?' one':''}" style="grid-column:${c};grid-row:${r}"></div>`
+    ).join('');
+  } else {
+    diceFace.innerHTML = `<div class="glyph">${v}</div>`;
+  }
+}
+setDice('?');
+
 rollBtn.addEventListener('click', ()=>{
   if(state.busy || state.finished) return;
   if(state.stamina<=0){
     log('スタミナ切れ…！ からあげ屋か土産店で回復しよう。休憩して1マス進むよ。');
+    setMood('sleepy', 2600);
     state.busy = true;
     rollBtn.disabled = true;
-    diceFace.textContent='💤';
+    setDice('💤');
     setTimeout(()=>{ moveSteps(1); }, 400);
     return;
   }
   state.busy = true;
   rollBtn.disabled = true;
+  diceFace.classList.remove('landed');
   diceFace.classList.add('rolling');
   sfxRoll();
   let count=0;
   const spin = setInterval(()=>{
-    diceFace.textContent = 1+Math.floor(Math.random()*6);
+    setDice(1+Math.floor(Math.random()*6));
     count++;
     if(count>8){
       clearInterval(spin);
       diceFace.classList.remove('rolling');
       const val = 1+Math.floor(Math.random()*6);
-      diceFace.textContent = val;
+      setDice(val);
+      void diceFace.offsetWidth;
+      diceFace.classList.add('landed');
       state.stamina = Math.max(0, state.stamina-1);
       updateHud();
       setTimeout(()=>moveSteps(val), 250);
@@ -742,7 +1728,7 @@ rollBtn.addEventListener('click', ()=>{
 function moveSteps(steps){
   if(steps<=0){ afterMove(); return; }
   playerToken.classList.remove('hop'); void playerToken.offsetWidth; playerToken.classList.add('hop');
-  sfxStep();
+  sfxStep(); spawnDust();
   state.pos = (state.pos+1) % N;
   placeToken();
   if(state.pos===0){
@@ -756,6 +1742,7 @@ function moveSteps(steps){
 }
 
 function afterMove(){
+  spawnRipple();
   state.turns++;
   if(state.pos===0){ finishLoop(); return; }
   resolveTile(BOARD[state.pos]);
@@ -775,7 +1762,7 @@ function resolveTile(tile){
       const coin = 5+Math.floor(Math.random()*10);
       state.coins += coin;
       spawnParticle('+'+coin+'💰');
-      sfxCoin();
+      sfxCoin(); setMood('happy', 1500);
       log(`「${it.name}」を見つけた！ コイン+${coin}`);
       updateHud();
       endTurn(); break;
@@ -784,7 +1771,7 @@ function resolveTile(tile){
       const heal = 6+Math.floor(Math.random()*5);
       state.stamina = Math.min(state.maxStamina, state.stamina+heal);
       spawnParticle('+'+heal+'⚡');
-      sfxCoin();
+      sfxCoin(); setMood('happy', 1500);
       log(`からあげでスタミナ+${heal}！ 元気が出てきた！`);
       updateHud();
       endTurn(); break;
@@ -795,15 +1782,26 @@ function resolveTile(tile){
     case TILE_TYPES.WARP_FWD: {
       const nextLandmark = findNextLandmark(state.pos);
       log('近道を発見！ 次の名所まで一気にワープ！');
+      sfxWarp(); setMood('wow', 1400);
+      warpTrail(state.pos, nextLandmark);
+      playerToken.classList.remove('warping'); void playerToken.offsetWidth;
+      playerToken.classList.add('warping');
       state.pos = nextLandmark;
       placeToken();
-      setTimeout(()=>resolveTile(BOARD[state.pos]), 300);
+      setTimeout(()=>{ playerToken.classList.remove('warping'); spawnRipple(); }, 520);
+      setTimeout(()=>resolveTile(BOARD[state.pos]), 620);
       return;
     }
     case TILE_TYPES.WARP_BACK: {
       state.pos = Math.max(0, state.pos-3);
       placeToken();
       log('道に迷って3マス戻ってしまった…トホホ。');
+      sfxWrong(); setMood('sad', 2200);
+      const bw = document.getElementById('boardWrap');
+      bw.classList.remove('shake'); void bw.offsetWidth; bw.classList.add('shake');
+      playerToken.classList.remove('dizzy'); void playerToken.offsetWidth;
+      playerToken.classList.add('dizzy');
+      setTimeout(()=>{ bw.classList.remove('shake'); playerToken.classList.remove('dizzy'); }, 760);
       endTurn(); break;
     }
     case TILE_TYPES.LANDMARK:
@@ -861,12 +1859,12 @@ function answerQuiz(i, q, btnEl, qIdx){
     const coin = 20;
     state.coins += coin;
     state.quizCorrect++;
-    sfxCorrect();
+    sfxCorrect(); setMood('happy', 2200);
     modalBody.textContent += `\n\n✅ 正解！ コイン+${coin}` + stampMsg;
   } else {
     btnEl.classList.add('wrong');
     btns[q.a].classList.add('correct');
-    sfxWrong();
+    sfxWrong(); setMood('sad', 2200);
     modalBody.textContent += `\n\n❌ 残念…正解は「${q.c[q.a]}」` + stampMsg;
   }
   updateHud();
@@ -880,6 +1878,7 @@ function openMoveInfo(mIdx){
   const m = MOVE_INFOS[mIdx];
   const isNewStamp = addStamp('m'+mIdx);
   if(isNewStamp) sfxStamp(); else sfxCoin();
+  setMood('happy', 2000);
   const coin = isNewStamp ? 25 : 8;
   state.coins += coin;
   spawnParticle('+'+coin+'💰');
@@ -910,6 +1909,7 @@ const RANKS = [
 function finishLoop(){
   state.busy = true;
   sfxFanfare();
+  setMood('happy', 4200);
   const itemBonus = state.items.length*10;
   const staminaBonus = state.stamina*3;
   const quizBonus = state.quizCorrect*5;
@@ -928,13 +1928,16 @@ function finishLoop(){
 
   const grid = document.getElementById('stampGrid');
   grid.innerHTML = '';
+  let seq = 0;
   QUIZZES.forEach((q,i)=>{
     const got = state.stamps.has('q'+i);
-    grid.insertAdjacentHTML('beforeend', `<div class="stamp-badge ${got?'got':''}" title="${q.name}">${q.icon}</div>`);
+    const delay = got ? `style="animation-delay:${(seq++ *0.055).toFixed(3)}s"` : '';
+    grid.insertAdjacentHTML('beforeend', `<div class="stamp-badge ${got?'got':''}" title="${q.name}" ${delay}>${q.icon}</div>`);
   });
   MOVE_INFOS.forEach((m,i)=>{
     const got = state.stamps.has('m'+i);
-    grid.insertAdjacentHTML('beforeend', `<div class="stamp-badge ${got?'got':''}" title="${m.name}">${m.icon}</div>`);
+    const delay = got ? `style="animation-delay:${(seq++ *0.055).toFixed(3)}s"` : '';
+    grid.insertAdjacentHTML('beforeend', `<div class="stamp-badge ${got?'got':''}" title="${m.name}" ${delay}>${m.icon}</div>`);
   });
   document.getElementById('completeBanner').style.display = (state.stamps.size===STAMP_TOTAL) ? 'block' : 'none';
 
@@ -942,7 +1945,24 @@ function finishLoop(){
   document.getElementById('rBest').textContent = state.bestScore;
 
   document.getElementById('gameScreen').style.display='none';
-  document.getElementById('resultScreen').style.display='flex';
+  const rs = document.getElementById('resultScreen');
+  rs.style.display='flex';
+
+  /* 集計行を順に、判子は最後に捺す */
+  const rank = document.getElementById('resultRank');
+  rank.style.animation='none'; void rank.offsetWidth; rank.style.animation='';
+  document.querySelectorAll('#resultBox .result-row').forEach((el,i)=>{
+    el.style.animation='none'; void el.offsetWidth;
+    el.style.animation=''; el.style.animationDelay = (0.06 + i*0.06) + 's';
+  });
+  if(!REDUCE_MOTION){
+    setTimeout(()=>sfxStamp(), 260);
+    const got = state.stamps.size;
+    for(let i=0;i<Math.min(got,15);i++){
+      setTimeout(()=>noiseHit({dur:0.05, vol:0.09, freq:300, q:0.9, type:'lowpass'}), 420 + i*55);
+    }
+  }
+  spawnLeaves(rs, 26);
   state.finished = true;
 }
 
@@ -962,6 +1982,8 @@ function resetState(keepLoop){
   state.turns=0; state.finished=false; state.busy=false;
   state.loop = keepLoop ? state.loop+1 : 1;
   if(!keepLoop){ state.stamps = new Set(); }
+  shownCoins = 0;
+  setDice('?');
   updateHud();
   log('中津駅に到着した。さあ、暮らし発見の旅の始まりだ！');
   renderBoard();
@@ -975,15 +1997,22 @@ document.getElementById('startBtn').addEventListener('click', startGame);
 function startGame(){
   document.getElementById('titleScreen').style.display='none';
   document.getElementById('gameScreen').style.display='flex';
-  playerToken.innerHTML = '<canvas width="60" height="69"></canvas>';
-  const pc = playerToken.querySelector('canvas');
-  drawAcorn(pc.getContext('2d'));
+  playerToken.innerHTML = '<div class="token-shadow"></div><canvas></canvas>';
+  paintAcorn(playerToken.querySelector('canvas'), 40, 46, acornMood);
   renderBoard();
   updateHud();
-  beep(600,0.08,'sine',0.05);
+  resumeAudio();
+  pluck(587.33,0.6,0.07); pluck(880,0.7,0.06,0.09);
+  startBgm();
 }
 
-window.addEventListener('resize', ()=>{ renderBoard(); });
+window.addEventListener('resize', ()=>{
+  renderBoard();
+  paintTitleAcorn();
+  
+  const c = playerToken.querySelector('canvas');
+  if(c) paintAcorn(c, 40, 46, acornMood);
+});
 </script>
 </body>
 </html>
